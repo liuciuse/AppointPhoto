@@ -1,5 +1,5 @@
 package com.example.appointphoto;
-//TEST
+//TEST fuck
 public class LK {
 	void show(){
 		System.out.println("haha");

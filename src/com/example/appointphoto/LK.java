@@ -1,5 +1,10 @@
 package com.example.appointphoto;
 
+//test
 public class LK {
-	//test
+
+	void show() {
+		System.out.println("haha");
+	}
+
 }

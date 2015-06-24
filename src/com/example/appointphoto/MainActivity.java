@@ -30,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
         
         Intent mIntent = new Intent(this,MenuActivity.class);  
         startActivity(mIntent);
-//        finish();
+        finish();
     }
 
 

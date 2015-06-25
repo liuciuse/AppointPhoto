@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 
 import com.example.appointphoto.R;
 import com.special.ResideMenu.ResideMenu;
@@ -23,7 +24,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        parentView = inflater.inflate(R.layout.home, container, false);
+        parentView = inflater.inflate(R.layout.homelistview, container, false);
         setUpViews();
         return parentView;
     }
@@ -32,15 +33,8 @@ public class HomeFragment extends Fragment {
         MenuActivity parentActivity = (MenuActivity) getActivity();
         resideMenu = parentActivity.getResideMenu();
 
-        parentView.findViewById(R.id.btn_open_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
-            }
-        });
-
-        // add gesture operation's ignored views
-        FrameLayout ignored_view = (FrameLayout) parentView.findViewById(R.id.ignored_view);
+        // add gesture operation's ignored views 水平滚动条不触发菜单手势
+        HorizontalScrollView ignored_view = (HorizontalScrollView) parentView.findViewById(R.id.header_ScrollView);
         resideMenu.addIgnoredView(ignored_view);
     }
 

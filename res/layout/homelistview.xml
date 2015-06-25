@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@android:color/white">
+
+
+   <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/header_ScrollView"
+        android:fadingEdge="horizontal"
+        android:background="#10000000" >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp"
+            >
+             <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title_bar_item0"
+                    android:text="全部"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:background="#00000000"
+                    android:textColor="@drawable/head_title_selector"/>
+              <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title_bar_item1"
+                    android:text="全部"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:background="#00000000"
+                    android:textColor="@drawable/head_title_selector"/>
+               <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title_bar_item2"
+                    android:text="全部"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:background="#00000000"
+                    android:textColor="@drawable/head_title_selector"/>
+           
+               <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title_bar_item3"
+                    android:text="全部"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:background="#00000000"
+                    android:textColor="@drawable/head_title_selector"/>
+              <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title_bar_item4"
+                    android:text="全部"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:background="#00000000"
+                    android:textColor="@drawable/head_title_selector"/>
+               <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title_bar_item5"
+                    android:text="全部"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:background="#00000000"
+                    android:textColor="@drawable/head_title_selector"/>
+           
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+</LinearLayout>
+

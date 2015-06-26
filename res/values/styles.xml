@@ -22,9 +22,14 @@
         <item name="android:textSize">25sp</item>
     </style>
 
-    <style name="fragment_text">
-        <item name="android:textColor">#ffacacac</item>
-        <item name="android:textSize">25sp</item>
+    
+     <style name="bottom_bar_button">
+        <item name="android:textColor">@drawable/head_title_selector</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:background">#00000000</item>
+        
     </style>
     
 </resources>

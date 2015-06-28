@@ -48,10 +48,10 @@ public class MenuActivity extends FragmentActivity implements View.OnClickListen
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
 
         // create menu items;
-        itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
-        itemProfile  = new ResideMenuItem(this, R.drawable.icon_profile,  "Profile");
-        itemCalendar = new ResideMenuItem(this, R.drawable.icon_calendar, "Calendar");
-        itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
+        itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "主页");
+        itemProfile  = new ResideMenuItem(this, R.drawable.icon_profile,  "我的");
+        itemCalendar = new ResideMenuItem(this, R.drawable.icon_calendar, "设置");
+        itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "退出");
 
         itemHome.setOnClickListener(this);
         itemProfile.setOnClickListener(this);

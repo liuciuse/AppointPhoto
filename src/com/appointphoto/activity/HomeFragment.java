@@ -3,10 +3,14 @@ package com.appointphoto.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
+import android.widget.ListAdapter;
 
 import com.example.appointphoto.R;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -23,11 +27,15 @@ public class HomeFragment extends Fragment {
 	private View parentView;// 整个界面
 	private ResideMenu resideMenu;// 侧栏
 	private PullToRefreshListView mPullRefreshListView;// 可刷新listview
+	private ListAdapter adapter;
+	private LayoutInflater inflater;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		this.inflater = inflater;
 		parentView = inflater.inflate(R.layout.homelistview, container, false);
+		adapter = new MyAdapter();
 		setUpViews();
 		return parentView;
 	}
@@ -47,16 +55,15 @@ public class HomeFragment extends Fragment {
 		// 设置两端刷新
 		mPullRefreshListView.setMode(Mode.BOTH);
 		ILoadingLayout startLabels = mPullRefreshListView.getLoadingLayoutProxy(true, false);
-		startLabels.setPullLabel("释放刷新...");// 刚下拉时，显示的提示
+		startLabels.setPullLabel("下拉刷新...");// 刚下拉时，显示的提示
 		startLabels.setRefreshingLabel("正在刷新...");// 刷新时
 		startLabels.setReleaseLabel("释放刷新...");// 下来达到一定距离时，显示的提示
 
 		ILoadingLayout endLabels = mPullRefreshListView.getLoadingLayoutProxy(false, true);
 		endLabels.setPullLabel("加载更多...");// 刚下拉时，显示的提示
 		endLabels.setRefreshingLabel("正在载入...");// 刷新时
-		endLabels.setReleaseLabel("加载更多...");// 下来达到一定距离时，显示的提示
-		mPullRefreshListView
-				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
+		endLabels.setReleaseLabel("释放加载...");// 下来达到一定距离时，显示的提示
+		mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
 
 					@Override
 					public void onPullDownToRefresh(
@@ -70,8 +77,23 @@ public class HomeFragment extends Fragment {
 					}
 
 				});
+		
+		//设置listview数据源
+		mPullRefreshListView.setAdapter(adapter);
+		
+		//设置item点击事件
+		mPullRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> container, View view, int position,
+					long id) {
+				//设置点击摄影师后，打开摄影师主界面
+			}
+			
+		});
 	}
 
+	
 	// 下拉刷新
 	private class PullRefresh extends AsyncTask<Void, Void, Void> {
 		@Override
@@ -88,6 +110,7 @@ public class HomeFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			mPullRefreshListView.onRefreshComplete();
+			super.onPostExecute(result);
 		}
 	}
 
@@ -106,7 +129,56 @@ public class HomeFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			//滚动到底部
 			mPullRefreshListView.onRefreshComplete();
+			super.onPostExecute(result);
 		}
 	}
+	
+	//设机数据源
+	private class MyAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			return 100;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup container) {
+			ViewHolder holder;
+			if (convertView == null) {
+				convertView = inflater.inflate(R.layout.home_list_item, container, false);
+				holder = new ViewHolder();
+				//得到各控件的对象
+				
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();//获得暂存的引用
+			}
+			//设置数据
+			return convertView;
+		}
+		
+		@Override
+		public boolean isEnabled(int position) {
+			return true;
+		}
+		
+		//暂存item view中的控件引用
+		public class ViewHolder {
+			
+		}
+		
+	}
+	
 }

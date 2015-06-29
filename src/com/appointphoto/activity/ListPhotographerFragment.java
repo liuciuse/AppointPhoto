@@ -1,5 +1,6 @@
 package com.appointphoto.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.example.appointphoto.R;
+import com.example.appointphoto.WelcomeActivity;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
@@ -31,6 +33,7 @@ public class ListPhotographerFragment extends Fragment {
 	private PullToRefreshListView mPullRefreshListView;// 可刷新listview
 	private ListAdapter adapter;
 	private LayoutInflater inflater;
+	private MainActivity parentActivity;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +46,7 @@ public class ListPhotographerFragment extends Fragment {
 	}
 
 	private void setUpViews() {
-		MainActivity parentActivity = (MainActivity) getActivity();
+		parentActivity = (MainActivity) getActivity();
 		resideMenu = parentActivity.getResideMenu();
 
 		// add gesture operation's ignored views 水平滚动条不触发菜单手势
@@ -90,6 +93,9 @@ public class ListPhotographerFragment extends Fragment {
 			public void onItemClick(AdapterView<?> container, View view, int position,
 					long id) {
 				//设置点击摄影师后，打开摄影师主界面
+				Intent mIntent = new Intent(parentActivity,PhotographerActivity.class);  
+                startActivity(mIntent);
+				
 			}
 			
 		});

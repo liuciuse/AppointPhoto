@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical" android:background="@android:color/white" android:layout_width="fill_parent" android:layout_height="wrap_content"
+<LinearLayout android:orientation="vertical" android:background="@android:color/white" android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/graph_header"
   xmlns:android="http://schemas.android.com/apk/res/android">
     <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
         <ImageView android:id="@id/photographer_avatar_imageV" android:layout_width="@dimen/photographer_avatar_shape" android:layout_height="@dimen/photographer_avatar_shape" android:layout_marginLeft="@dimen/general_space" android:layout_marginTop="@dimen/general_space" android:src="@drawable/menu_icon_avatar" android:scaleType="centerCrop" />

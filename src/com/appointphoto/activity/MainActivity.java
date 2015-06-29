@@ -95,12 +95,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             changeFragment(new ListPhotographerFragment());
             headerName.setText("摄影师");
         }else if (view == itemProfile){
-            changeFragment(new ProfileFragment());
+            changeFragment(new MineFragment());
             headerName.setText("我的");
         }else if (view == itemCalendar){
-            changeFragment(new CalendarFragment());
+            changeFragment(new SettingFragment());
         }else if (view == itemSettings){
-            changeFragment(new SettingsFragment());
+            changeFragment(new QuitFragment());
         }
 
         resideMenu.closeMenu();

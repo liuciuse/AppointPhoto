@@ -367,4 +367,7 @@
     <item type="id" name="webview">false</item>
     <item type="id" name="welcome_imageView">false</item>
     <item type="id" name="work_category_listview">false</item>
+    
+    <item type="id" name="gridview" />
+    <item type="id" name="scrollview" />
 </resources>

@@ -1,35 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+    <style name="AppBaseTheme" parent="@android:style/Theme.Light" />
+    <style name="AppTheme" parent="@style/AppBaseTheme" />
+    <style name="AlertDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/popup_bg</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
-
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <style name="loading_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:drawable/alert_dark_frame</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
-    
-    <style name="fragment_text">
-        <item name="android:textColor">#ffacacac</item>
-        <item name="android:textSize">25sp</item>
+    <style name="mj_progress_dlg_style" parent="@android:style/Theme.Dialog">
+        <item name="android:textColorPrimary">#ff000000</item>
+        <item name="android:alertDialogStyle">@style/CustomProgressDialogStyle</item>
     </style>
-
-    
-     <style name="bottom_bar_button">
-        <item name="android:textColor">@drawable/head_title_selector</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_marginLeft">0dp</item>
-        <item name="android:background">#00000000</item>
-        
+    <style name="CustomProgressDialogStyle">
+        <item name="android:fullDark">@color/progress_dialog_bg_color</item>
+        <item name="android:topDark">@color/progress_dialog_bg_color</item>
+        <item name="android:centerDark">@color/progress_dialog_bg_color</item>
+        <item name="android:bottomDark">@color/progress_dialog_bg_color</item>
+        <item name="android:fullBright">@color/progress_dialog_bg_color</item>
+        <item name="android:topBright">@color/progress_dialog_bg_color</item>
+        <item name="android:centerBright">@color/progress_dialog_bg_color</item>
+        <item name="android:bottomBright">@color/progress_dialog_bg_color</item>
+        <item name="android:bottomMedium">@color/progress_dialog_bg_color</item>
+        <item name="android:centerMedium">@color/progress_dialog_bg_color</item>
     </style>
-    
+    <style name="ShareMenuAnimation" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/share_menu_enter</item>
+        <item name="android:windowExitAnimation">@anim/share_menu_exit</item>
+    </style>
 </resources>

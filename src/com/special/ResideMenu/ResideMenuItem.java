@@ -1,11 +1,12 @@
 package com.special.ResideMenu;
 
+import com.example.appointphoto.R;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import com.example.appointphoto.R;;
+import android.widget.TextView;;
 
 /**
  * User: special

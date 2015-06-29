@@ -35,7 +35,8 @@
                     android:text="摄影师"
                     android:textSize="24sp"
                     android:textColor="#999999"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:id="@+id/layout_top_name"/>
         </FrameLayout>
 
         <ImageView

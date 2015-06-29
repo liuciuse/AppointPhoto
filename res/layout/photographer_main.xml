@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+     <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_top">
+
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="#2ea3fe"/>
+
+        <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+            <Button
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/titlebar_back_selector"
+                    android:id="@+id/title_bar_left_menu"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_marginLeft="10dp"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="7dp"
+                    android:text="*的空间"
+                    android:textSize="24sp"
+                    android:textColor="#000000"
+                    android:layout_gravity="center"
+                    android:id="@+id/layout_top_name"/>
+             <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:text="分享"
+                    android:textColor="@color/orange"
+                    android:id="@+id/title_bar_right_menu"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginLeft="10dp"/>
+        </FrameLayout>
+
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="#ebebeb"/>
+
+    </LinearLayout>
+    
+    <!-- 个人信息头部 -->
+	<include android:id="@+id/graph_header" layout="@layout/photographer_header" />
+    <!-- The PullToRefreshScrollView replaces a standard PullToRefreshScrollView widget. -->
+
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_refresh_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrMode="both" >
+
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+
+</LinearLayout>

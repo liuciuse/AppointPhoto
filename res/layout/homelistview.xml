@@ -83,6 +83,7 @@
                     style="@style/bottom_bar_button"/>
            
             </LinearLayout>
+            
 
         </HorizontalScrollView>
 

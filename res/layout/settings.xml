@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Settings"
-            style="@style/fragment_text"
-            android:layout_gravity="center"
-            android:id="@+id/textView"/>
-
-</FrameLayout>
+<LinearLayout android:orientation="vertical" android:background="@color/default_bg_color" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include layout="@layout/navbar" />
+    <TextView android:id="@id/item_line_textV" android:background="@color/upload_work_edittext_color" android:layout_width="fill_parent" android:layout_height="@dimen/line_height" android:layout_marginTop="@dimen/select_item_category_margin_top" />
+    <RelativeLayout android:background="@color/white" android:layout_width="fill_parent" android:layout_height="@dimen/menu_item_child_height">
+        <ImageView android:layout_width="@dimen/arrow_layout_width" android:layout_height="fill_parent" android:layout_marginRight="@dimen/general_space" android:src="@drawable/item_arrow" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+        <Button android:textSize="@dimen/add_review_edittext_textsize" android:textColor="@color/home_user_name_color" android:gravity="left|center" android:id="@id/setting_clear_cache_btn" android:background="@null" android:paddingLeft="@dimen/general_space" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="清除缓存（68M）" />
+    </RelativeLayout>
+    <TextView android:background="@color/upload_work_edittext_color" android:layout_width="fill_parent" android:layout_height="@dimen/line_height" />
+    <TextView android:background="@color/upload_work_edittext_color" android:layout_width="fill_parent" android:layout_height="@dimen/line_height" android:layout_marginTop="@dimen/select_item_category_margin_top" />
+    <RelativeLayout android:background="@color/white" android:layout_width="fill_parent" android:layout_height="@dimen/menu_item_child_height">
+        <ImageView android:layout_width="@dimen/arrow_layout_width" android:layout_height="fill_parent" android:layout_marginRight="@dimen/general_space" android:src="@drawable/item_arrow" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+        <Button android:textSize="@dimen/add_review_edittext_textsize" android:textColor="@color/home_user_name_color" android:gravity="left|center" android:id="@id/settings_feedback_btn" android:background="@null" android:paddingLeft="@dimen/general_space" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="有什么问题，这里反馈" />
+    </RelativeLayout>
+    <TextView android:background="@color/upload_work_edittext_color" android:layout_width="fill_parent" android:layout_height="@dimen/line_height" />
+    <RelativeLayout android:background="@color/white" android:layout_width="fill_parent" android:layout_height="@dimen/menu_item_child_height">
+        <ImageView android:id="@id/arrow_imageView" android:layout_width="@dimen/arrow_layout_width" android:layout_height="fill_parent" android:layout_marginRight="@dimen/general_space" android:src="@drawable/item_arrow" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+        <Button android:textSize="@dimen/add_review_edittext_textsize" android:textColor="@color/home_user_name_color" android:gravity="left|center" android:id="@id/settings_check_update_btn" android:background="@null" android:paddingLeft="@dimen/general_space" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="当前版本" />
+        <TextView android:gravity="center_vertical" android:id="@id/settings_app_version_textview" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginRight="@dimen/general_space" android:layout_toLeftOf="@id/arrow_imageView" />
+        <TextView android:textSize="@dimen/photographer_real_name_textsize" android:textColor="@color/nav_btn_textcolor" android:gravity="center_vertical" android:id="@id/settings_new_app_version_textview" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginLeft="@dimen/price_face_btn_width" android:text="New" />
+    </RelativeLayout>
+    <TextView android:background="@color/upload_work_edittext_color" android:layout_width="fill_parent" android:layout_height="@dimen/line_height" />
+</LinearLayout>

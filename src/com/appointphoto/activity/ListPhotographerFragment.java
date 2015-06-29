@@ -106,12 +106,12 @@ public class ListPhotographerFragment extends Fragment {
 	private class PullRefresh extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			try {
-				Thread.sleep(1000);
-				// 从数据库获取最新数据
-
-			} catch (InterruptedException e) {
-			}
+//			try {
+//				Thread.sleep(1000);
+//				// 从数据库获取最新数据
+//
+//			} catch (InterruptedException e) {
+//			}
 			return null;
 		}
 
@@ -126,12 +126,12 @@ public class ListPhotographerFragment extends Fragment {
 	private class PullupGetMore extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			try {
-				Thread.sleep(1000);
-				// 从数据库加载更多数据
-
-			} catch (InterruptedException e) {
-			}
+//			try {
+//				Thread.sleep(1000);
+//				// 从数据库加载更多数据
+//
+//			} catch (InterruptedException e) {
+//			}
 			return null;
 		}
 

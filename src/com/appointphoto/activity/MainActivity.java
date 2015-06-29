@@ -1,8 +1,12 @@
 package com.appointphoto.activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -18,9 +22,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private ResideMenu resideMenu;
     private MainActivity mContext;
     private ResideMenuItem itemHome;
-    private ResideMenuItem itemProfile;
-    private ResideMenuItem itemCalendar;
-    private ResideMenuItem itemSettings;
+    private ResideMenuItem itemMine;
+    private ResideMenuItem itemSetting;
+    private ResideMenuItem itemQuit;
     private TextView headerName;
 
     /**
@@ -57,19 +61,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         // create menu items;
         itemHome     = new ResideMenuItem(this, R.drawable.menu_icon_home,"首页");
-        itemProfile  = new ResideMenuItem(this, R.drawable.menu_icon_authenticate,  "我的");
-        itemCalendar = new ResideMenuItem(this, R.drawable.menu_icon_setting, "设置");
-        itemSettings = new ResideMenuItem(this, R.drawable.menu_icon_quit, "退出登录");
+        itemMine  = new ResideMenuItem(this, R.drawable.menu_icon_authenticate,  "我的");
+        itemSetting = new ResideMenuItem(this, R.drawable.menu_icon_setting, "设置");
+        itemQuit = new ResideMenuItem(this, R.drawable.menu_icon_quit, "退出登录");
 
         itemHome.setOnClickListener(this);
-        itemProfile.setOnClickListener(this);
-        itemCalendar.setOnClickListener(this);
-        itemSettings.setOnClickListener(this);
+        itemMine.setOnClickListener(this);
+        itemSetting.setOnClickListener(this);
+        itemQuit.setOnClickListener(this);
 
         resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemProfile, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemCalendar, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemMine, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemSetting, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemQuit, ResideMenu.DIRECTION_LEFT);
 
         
 
@@ -94,28 +98,48 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (view == itemHome){
             changeFragment(new ListPhotographerFragment());
             headerName.setText("摄影师");
-        }else if (view == itemProfile){
+        }else if (view == itemMine){
             changeFragment(new MineFragment());
             headerName.setText("我的");
-        }else if (view == itemCalendar){
-            changeFragment(new SettingFragment());
-        }else if (view == itemSettings){
-            changeFragment(new QuitFragment());
+        }else if (view == itemSetting){
+        	startActivity(new Intent(this,SettingActivity.class));
+        }else if (view == itemQuit){
+        	exit();
         }
 
         resideMenu.closeMenu();
     }
 
-    //监听菜单状态
+    //退出此应用
+    private void exit() {
+    	 new AlertDialog.Builder(MainActivity.this).setTitle("温馨提示")//设置对话框标题  
+         .setMessage("亲,您确定要退出吗？")//设置显示的内容  
+         .setPositiveButton("退出",new DialogInterface.OnClickListener() {//添加确定按钮  
+             @Override  
+             public void onClick(DialogInterface dialog, int which) {// 
+            	 
+                 MainActivity.this.finish();  
+             }  
+         }).setNegativeButton("取消",new DialogInterface.OnClickListener() {//添加返回按钮  
+             @Override  
+             public void onClick(DialogInterface dialog, int which) {//响应事件  
+                 Log.i("alertdialog"," 请保存数据！");  
+             }  
+         }).show();//在按键响应事件中显示此对话框  
+     }  
+      
+    
+
+	//监听菜单状态
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
         @Override
         public void openMenu() {
-            Toast.makeText(mContext, "Menu is opened!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "Menu is opened!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void closeMenu() {
-            Toast.makeText(mContext, "Menu is closed!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "Menu is closed!", Toast.LENGTH_SHORT).show();
         }
     };
 

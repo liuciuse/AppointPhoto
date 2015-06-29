@@ -24,7 +24,7 @@ public class WelcomeActivity extends Activity {
         Window window=WelcomeActivity.this.getWindow();
         //设置当前窗体为全屏显示
         window.setFlags(flag, flag);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.welcome);
       
         
         

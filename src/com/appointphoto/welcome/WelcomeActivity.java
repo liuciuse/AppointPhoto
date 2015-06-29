@@ -1,4 +1,4 @@
-package com.example.appointphoto;
+package com.appointphoto.welcome;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.appointphoto.activity.MainActivity;
+import com.example.appointphoto.R;
 
 public class WelcomeActivity extends Activity {
 //×¢ÊÍ

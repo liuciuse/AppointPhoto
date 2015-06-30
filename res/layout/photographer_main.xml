@@ -61,8 +61,6 @@
         android:id="@+id/pull_refresh_scrollview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        ptr:ptrAnimationStyle="flip"
-        ptr:ptrMode="both"
         android:cacheColorHint="#00000000"
         android:divider="#19000000"
         android:dividerHeight="10dp"
@@ -71,14 +69,16 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true"
-        ptr:ptrHeaderBackground="#10000000"  
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrDrawable="@drawable/default_ptr_flip"
+        ptr:ptrHeaderBackground="#10000000"
         ptr:ptrHeaderTextColor="@color/darkgray"
-        ptr:ptrDrawable="@drawable/default_ptr_flip">
+        ptr:ptrMode="both" >
 
         <LinearLayout
             android:id="@+id/sub_root_lin"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:orientation="vertical" >
 
             <!-- 个人信息头部 -->
@@ -88,9 +88,9 @@
                 layout="@layout/photographer_header" />
 
             <ListView
+                android:id="@+id/listview"
                 android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
+                android:layout_height="fill_parent" >
             </ListView>
         </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>

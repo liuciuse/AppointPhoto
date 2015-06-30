@@ -8,8 +8,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -35,6 +37,8 @@ public class PhotographerActivity extends Activity {
 	private ViewPager mactivities;
 	private ArrayList views;// 保存了可以滚动的view
 	private LinearLayout emptyactivities;
+	private LinearLayout graph_header;//滚动到顶部
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,8 +95,10 @@ public class PhotographerActivity extends Activity {
 			View tempView = inflater.inflate(R.layout.list_activity_item,
 					mactivities, false);
 			views.add(tempView);
+			//点击进入服务
+			tempView.setOnClickListener(new MyOnClickListener());
 		}
-		
+
 		// 设置Adapter
 		mactivities.setAdapter(new MyPagerAdapter());
 		// 设置监听状态变化，用来表达其他美化表示
@@ -113,23 +119,22 @@ public class PhotographerActivity extends Activity {
 
 			}
 		});
-		
-		//当有activities时，隐藏空项
+
+		// 当有activities时，隐藏空项
 		emptyactivities = (LinearLayout) findViewById(R.id.item_empty_layout);
 		emptyactivities.setVisibility(View.GONE);
 
+		graph_header = (LinearLayout) findViewById(R.id.graph_header);
+		graph_header.setFocusable(true);
+		graph_header.setFocusableInTouchMode(true);
+		graph_header.requestFocus(); 
 	}
+
 
 	// 下拉刷新
 	private class PullRefresh extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			// try {
-			// Thread.sleep(1000);
-			// // 从数据库获取最新数据
-			//
-			// } catch (InterruptedException e) {
-			// }
 			return null;
 		}
 
@@ -144,12 +149,6 @@ public class PhotographerActivity extends Activity {
 	private class PullupGetMore extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			// try {
-			// Thread.sleep(1000);
-			// // 从数据库加载更多数据
-			//
-			// } catch (InterruptedException e) {
-			// }
 			return null;
 		}
 
@@ -232,6 +231,15 @@ public class PhotographerActivity extends Activity {
 			container.addView((View) views.get(position));
 			return views.get(position);
 		}
+	}
+	
+	//点击服务项进入具体服务页面
+	private class MyOnClickListener implements View.OnClickListener {
+		@Override
+		public void onClick(View v) {
+			PhotographerActivity.this.startActivity(new Intent(PhotographerActivity.this, ServiceDetailActivity.class));
+		}
+		
 	}
 
 }

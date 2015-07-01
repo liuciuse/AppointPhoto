@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -35,6 +36,17 @@ public class ListPhotographerFragment extends Fragment {
 	private LayoutInflater inflater;
 	private MainActivity parentActivity;
 
+	// 所有类别
+	Button title_bar_item0;
+	Button title_bar_item1;
+	Button title_bar_item2;
+	Button title_bar_item3;
+	Button title_bar_item4;
+	Button title_bar_item5;
+	Button title_bar_item6;
+	Button title_bar_item7;
+	Button title_bar_item8;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -59,16 +71,19 @@ public class ListPhotographerFragment extends Fragment {
 				.findViewById(R.id.pull_refresh_list);
 		// 设置两端刷新
 		mPullRefreshListView.setMode(Mode.BOTH);
-		ILoadingLayout startLabels = mPullRefreshListView.getLoadingLayoutProxy(true, false);
+		ILoadingLayout startLabels = mPullRefreshListView
+				.getLoadingLayoutProxy(true, false);
 		startLabels.setPullLabel("下拉刷新...");// 刚下拉时，显示的提示
 		startLabels.setRefreshingLabel("正在刷新...");// 刷新时
 		startLabels.setReleaseLabel("释放刷新...");// 下来达到一定距离时，显示的提示
 
-		ILoadingLayout endLabels = mPullRefreshListView.getLoadingLayoutProxy(false, true);
+		ILoadingLayout endLabels = mPullRefreshListView.getLoadingLayoutProxy(
+				false, true);
 		endLabels.setPullLabel("加载更多...");// 刚下拉时，显示的提示
 		endLabels.setRefreshingLabel("正在载入...");// 刷新时
 		endLabels.setReleaseLabel("释放加载...");// 下来达到一定距离时，显示的提示
-		mPullRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
+		mPullRefreshListView
+				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
 
 					@Override
 					public void onPullDownToRefresh(
@@ -82,36 +97,66 @@ public class ListPhotographerFragment extends Fragment {
 					}
 
 				});
-		
-		//设置listview数据源
-		mPullRefreshListView.setAdapter(adapter);
-		
-		//设置item点击事件
-		mPullRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
-			@Override
-			public void onItemClick(AdapterView<?> container, View view, int position,
-					long id) {
-				//设置点击摄影师后，打开摄影师主界面
-				Intent mIntent = new Intent(parentActivity,PhotographerActivity.class);  
-                startActivity(mIntent);
-				
-			}
-			
-		});
+		// 设置listview数据源
+		mPullRefreshListView.setAdapter(adapter);
+
+		// 设置item点击事件
+		mPullRefreshListView
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> container,
+							View view, int position, long id) {
+						// 设置点击摄影师后，打开摄影师主界面
+						Intent mIntent = new Intent(parentActivity,
+								PhotographerActivity.class);
+						startActivity(mIntent);
+
+					}
+
+				});
+
+		// 下面类别选择处理
+		title_bar_item0 = (Button) parentView
+				.findViewById(R.id.title_bar_item0);
+		title_bar_item0.setOnClickListener(new MyBtnClickListener());
+		title_bar_item1 = (Button) parentView
+				.findViewById(R.id.title_bar_item1);
+		title_bar_item1.setOnClickListener(new MyBtnClickListener());
+		title_bar_item2 = (Button) parentView
+				.findViewById(R.id.title_bar_item2);
+		title_bar_item2.setOnClickListener(new MyBtnClickListener());
+		title_bar_item3 = (Button) parentView
+				.findViewById(R.id.title_bar_item3);
+		title_bar_item3.setOnClickListener(new MyBtnClickListener());
+		title_bar_item4 = (Button) parentView
+				.findViewById(R.id.title_bar_item4);
+		title_bar_item4.setOnClickListener(new MyBtnClickListener());
+		title_bar_item5 = (Button) parentView
+				.findViewById(R.id.title_bar_item5);
+		title_bar_item5.setOnClickListener(new MyBtnClickListener());
+		title_bar_item6 = (Button) parentView
+				.findViewById(R.id.title_bar_item6);
+		title_bar_item6.setOnClickListener(new MyBtnClickListener());
+		title_bar_item7 = (Button) parentView
+				.findViewById(R.id.title_bar_item7);
+		title_bar_item7.setOnClickListener(new MyBtnClickListener());
+		title_bar_item8 = (Button) parentView
+				.findViewById(R.id.title_bar_item8);
+		title_bar_item8.setOnClickListener(new MyBtnClickListener());
 	}
 
-	
 	// 下拉刷新
 	private class PullRefresh extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-//			try {
-//				Thread.sleep(1000);
-//				// 从数据库获取最新数据
-//
-//			} catch (InterruptedException e) {
-//			}
+			// try {
+			// Thread.sleep(1000);
+			// // 从数据库获取最新数据
+			//
+			// } catch (InterruptedException e) {
+			// }
 			return null;
 		}
 
@@ -126,24 +171,24 @@ public class ListPhotographerFragment extends Fragment {
 	private class PullupGetMore extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-//			try {
-//				Thread.sleep(1000);
-//				// 从数据库加载更多数据
-//
-//			} catch (InterruptedException e) {
-//			}
+			// try {
+			// Thread.sleep(1000);
+			// // 从数据库加载更多数据
+			//
+			// } catch (InterruptedException e) {
+			// }
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			//滚动到底部
+			// 滚动到底部
 			mPullRefreshListView.onRefreshComplete();
 			super.onPostExecute(result);
 		}
 	}
-	
-	//设机数据源
+
+	// 设机数据源
 	private class MyAdapter extends BaseAdapter {
 
 		@Override
@@ -165,52 +210,119 @@ public class ListPhotographerFragment extends Fragment {
 		public View getView(int position, View convertView, ViewGroup container) {
 			ViewHolder holder;
 			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.list_photographer_item, container, false);
+				convertView = inflater.inflate(R.layout.list_photographer_item,
+						container, false);
 				holder = new ViewHolder();
-				//得到各控件的对象
-				  holder.avatarImgView = ((ImageView)convertView.findViewById(R.id.avatar_imageView));
-			      holder.userNameTxtView = ((TextView)convertView.findViewById(R.id.user_nickname_text_view));
-			      holder.desTextView = ((TextView)convertView.findViewById(R.id.user_description_text_view));
-			      holder.priceTxtView = ((TextView)convertView.findViewById(R.id.price_text_view));
-			      holder.priceUnitTxtView = ((TextView)convertView.findViewById(R.id.price_unit_text_view));
-			      holder.tagTxtView = ((TextView)convertView.findViewById(R.id.photographer_tags_text_view));
-			      holder.workImageView1 = ((ImageView)convertView.findViewById(R.id.work_image_view_1));
-			      holder.workImageView2 = ((ImageView)convertView.findViewById(R.id.work_image_view_2));
-			      holder.numWorksTxtView = ((TextView)convertView.findViewById(R.id.home_num_work_textV));
-			      holder.numLikesTxtView = ((TextView)convertView.findViewById(R.id.home_num_like_textV));
-			      holder.numReviewsTxtView = ((TextView)convertView.findViewById(R.id.home_num_review_textV));
+				// 得到各控件的对象
+				holder.avatarImgView = ((ImageView) convertView
+						.findViewById(R.id.avatar_imageView));
+				holder.userNameTxtView = ((TextView) convertView
+						.findViewById(R.id.user_nickname_text_view));
+				holder.desTextView = ((TextView) convertView
+						.findViewById(R.id.user_description_text_view));
+				holder.priceTxtView = ((TextView) convertView
+						.findViewById(R.id.price_text_view));
+				holder.priceUnitTxtView = ((TextView) convertView
+						.findViewById(R.id.price_unit_text_view));
+				holder.tagTxtView = ((TextView) convertView
+						.findViewById(R.id.photographer_tags_text_view));
+				holder.workImageView1 = ((ImageView) convertView
+						.findViewById(R.id.work_image_view_1));
+				holder.workImageView2 = ((ImageView) convertView
+						.findViewById(R.id.work_image_view_2));
+				holder.numWorksTxtView = ((TextView) convertView
+						.findViewById(R.id.home_num_work_textV));
+				holder.numLikesTxtView = ((TextView) convertView
+						.findViewById(R.id.home_num_like_textV));
+				holder.numReviewsTxtView = ((TextView) convertView
+						.findViewById(R.id.home_num_review_textV));
 				convertView.setTag(holder);
 			} else {
-				holder = (ViewHolder) convertView.getTag();//获得暂存的引用
+				holder = (ViewHolder) convertView.getTag();// 获得暂存的引用
 			}
-			//设置数据
+			// 设置数据
 			return convertView;
 		}
-		
+
 		@Override
 		public boolean isEnabled(int position) {
 			return true;
 		}
-		
-		//暂存item view中的控件引用
+
+		// 暂存item view中的控件引用
 		public class ViewHolder {
 			ImageView avatarImgView;
-		    TextView desTextView;
-		    TextView numLikesTxtView;
-		    TextView numReviewsTxtView;
-		    TextView numWorksTxtView;
-		    TextView priceTxtView;
-		    TextView priceUnitTxtView;
-		    TextView tagTxtView;
-		    TextView userNameTxtView;
-		    ImageView workImageView1;
-		    ImageView workImageView2;
+			TextView desTextView;
+			TextView numLikesTxtView;
+			TextView numReviewsTxtView;
+			TextView numWorksTxtView;
+			TextView priceTxtView;
+			TextView priceUnitTxtView;
+			TextView tagTxtView;
+			TextView userNameTxtView;
+			ImageView workImageView1;
+			ImageView workImageView2;
 
-		    private ViewHolder()
-		    {
-		    }
+			private ViewHolder() {
+			}
 		}
-		
+
 	}
-	
+
+	// 选择类别处理
+	public class MyBtnClickListener implements View.OnClickListener {
+		@Override
+		public void onClick(View v) {
+			int vid = v.getId();
+			changeSelcolor(v);
+			switch (vid) {
+			case R.id.title_bar_item0:
+
+				break;
+			case R.id.title_bar_item1:
+
+				break;
+			case R.id.title_bar_item2:
+
+				break;
+			case R.id.title_bar_item3:
+
+				break;
+			case R.id.title_bar_item4:
+
+				break;
+			case R.id.title_bar_item5:
+
+				break;
+			case R.id.title_bar_item6:
+
+				break;
+			case R.id.title_bar_item7:
+
+				break;
+			case R.id.title_bar_item8:
+
+				break;
+
+			default:
+				break;
+			}
+		}
+
+	}
+
+	// 选中某一类别，标示
+	private void changeSelcolor(View v) {
+		title_bar_item0.setTextColor(getResources().getColor(R.color.black));
+		title_bar_item1.setTextColor(getResources().getColor(R.color.black));
+		title_bar_item2.setTextColor(getResources().getColor(R.color.black));
+		title_bar_item3.setTextColor(getResources().getColor(R.color.black));
+		title_bar_item4.setTextColor(getResources().getColor(R.color.black));
+		title_bar_item5.setTextColor(getResources().getColor(R.color.black));
+		title_bar_item6.setTextColor(getResources().getColor(R.color.black));
+		title_bar_item7.setTextColor(getResources().getColor(R.color.black));
+		title_bar_item8.setTextColor(getResources().getColor(R.color.black));
+		((Button)v).setTextColor(getResources().getColor(R.color.orange));
+	}
+
 }

@@ -370,4 +370,14 @@
     
     <item type="id" name="gridview" />
     <item type="id" name="scrollview" />
+    <item type="id" name="login_normol_btn" />
+    <item type="id" name="rigester_normol_btn" />
+    <item type="id" name="item_taken_positions_studio" />
+    
+    <item type="id" name="item_taken_positions_extraService" />
+    <item type="id" name="item_taken_positions_littletool" />
+    <item type="id" name="item_taken_positions_remoteOrder" />
+    <item type="id" name="item_taken_positions_negative" />
+    <item type="id" name="item_taken_positions_finishingPiece" />
+    
 </resources>

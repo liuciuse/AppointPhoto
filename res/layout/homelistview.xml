@@ -42,13 +42,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/title_bar_item0"
-                    android:text="全部"
+                    android:text="不限"
+                    android:textColor="@color/orange"
                     style="@style/bottom_bar_button"/>
               <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/title_bar_item1"
-                    android:text="写真"
+                    android:text="旅拍"
                     style="@style/bottom_bar_button"/>
                <Button
                     android:layout_width="wrap_content"
@@ -61,25 +62,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/title_bar_item3"
-                    android:text="儿童"
+                    android:text="创意"
                     style="@style/bottom_bar_button"/>
               <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/title_bar_item4"
-                    android:text="产品静物"
+                    android:text="写真"
                     style="@style/bottom_bar_button"/>
                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/title_bar_item5"
-                    android:text="宠物"
+                    android:text="亲子"
                     style="@style/bottom_bar_button"/>
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/title_bar_item6"
-                    android:text="其他"
+                    android:text="私房"
+                    style="@style/bottom_bar_button"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title_bar_item7"
+                    android:text="景物"
+                    style="@style/bottom_bar_button"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title_bar_item8"
+                    android:text="商业拍摄"
                     style="@style/bottom_bar_button"/>
            
             </LinearLayout>

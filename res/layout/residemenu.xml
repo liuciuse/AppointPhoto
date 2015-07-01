@@ -27,7 +27,8 @@
             android:layout_height="@dimen/menu_user_avatar_shape"
             android:layout_marginLeft="@dimen/menu_user_avatar_marginTop"
             android:layout_marginTop="@dimen/menu_user_avatar_marginTop"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/menu_icon_avatar" />
 
         <TextView
             android:id="@id/user_nickname_text_view"

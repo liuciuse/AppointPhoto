@@ -858,7 +858,7 @@ int id action_context_bar 0x7f05019f
 int id action_menu_divider 0x7f050016
 int id action_menu_presenter 0x7f050017
 int id action_mode_close_button 0x7f0501a6
-int id action_settings 0x7f0501d6
+int id action_settings 0x7f0501d8
 int id activity_btn 0x7f0500cf
 int id activity_chooser_view_content 0x7f0501a7
 int id activity_pagecontrol 0x7f050064
@@ -1102,6 +1102,7 @@ int id login_qq_btn 0x7f0500c9
 int id login_weibo_btn 0x7f0500c8
 int id mainView 0x7f050025
 int id main_fragment 0x7f0500d1
+int id man_textV 0x7f0501d6
 int id manualOnly 0x7f05001e
 int id menu_item_line_textV 0x7f050113
 int id menu_item_line_textV1 0x7f0500e1
@@ -1299,6 +1300,7 @@ int id webView 0x7f050026
 int id webview 0x7f05018f
 int id welcome_imageView 0x7f050190
 int id withText 0x7f05000c
+int id woman_textV 0x7f0501d7
 int id work_category_btn 0x7f050114
 int id work_category_listview 0x7f050191
 int id work_des_edittext 0x7f050111
@@ -1363,8 +1365,9 @@ int layout register 0x7f030027
 int layout residemenu 0x7f030028
 int layout residemenu_item 0x7f030029
 int layout settings 0x7f03002a
-int layout support_simple_spinner_dropdown_item 0x7f03002b
-int layout welcome 0x7f03002c
+int layout sexchoosen 0x7f03002b
+int layout support_simple_spinner_dropdown_item 0x7f03002c
+int layout welcome 0x7f03002d
 int menu main 0x7f0c0000
 int string abc_action_bar_home_description 0x7f0a0001
 int string abc_action_bar_up_description 0x7f0a0002

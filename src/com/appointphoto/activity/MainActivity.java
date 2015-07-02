@@ -30,11 +30,15 @@ public class MainActivity extends FragmentActivity implements
 	private ResideMenuItem itemMine;
 	private ResideMenuItem itemSetting;
 	private ResideMenuItem itemQuit;
+	private ResideMenuItem itemRegAsPhotographer;
+	private ResideMenuItem itemRegAsModel;
+	private ResideMenuItem itemRegAsdresser;
 	private TextView headerName;
 
-	// 定义一个变量，来标识是否退出 
+	// 定义一个变量，来标识是否退出
 	/*
-	 * 下面实现按两下返回键退出*/
+	 * 下面实现按两下返回键退出
+	 */
 	private static boolean isExit = false;
 
 	Handler mHandler = new Handler() {
@@ -118,15 +122,27 @@ public class MainActivity extends FragmentActivity implements
 				"我的");
 		itemSetting = new ResideMenuItem(this, R.drawable.menu_icon_setting,
 				"设置");
+		itemRegAsPhotographer = new ResideMenuItem(this,
+				R.drawable.menu_icon_invite, "申请为认证摄影师");
+		itemRegAsdresser = new ResideMenuItem(this,
+				R.drawable.menu_icon_invite, "申请为认证化妆师");
+		itemRegAsModel = new ResideMenuItem(this,
+				R.drawable.menu_icon_invite, "申请为认证模特");
 		itemQuit = new ResideMenuItem(this, R.drawable.menu_icon_quit, "退出登录");
 
 		itemHome.setOnClickListener(this);
 		itemMine.setOnClickListener(this);
 		itemSetting.setOnClickListener(this);
 		itemQuit.setOnClickListener(this);
+		itemRegAsPhotographer.setOnClickListener(this);
+		itemRegAsModel.setOnClickListener(this);
+		itemRegAsdresser.setOnClickListener(this);
 
 		resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemMine, ResideMenu.DIRECTION_LEFT);
+		resideMenu.addMenuItem(itemRegAsPhotographer, ResideMenu.DIRECTION_LEFT);
+		resideMenu.addMenuItem(itemRegAsdresser, ResideMenu.DIRECTION_LEFT);
+		resideMenu.addMenuItem(itemRegAsModel, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemSetting, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemQuit, ResideMenu.DIRECTION_LEFT);
 
@@ -159,6 +175,12 @@ public class MainActivity extends FragmentActivity implements
 			startActivity(new Intent(this, SettingActivity.class));
 		} else if (view == itemQuit) {
 			exit();
+		} else if (view == itemRegAsPhotographer) {
+			startActivity(new Intent(this, LoginActivity.class));
+		} else if (view == itemRegAsdresser) {
+			
+		} else if (view == itemRegAsModel) {
+			
 		}
 
 		resideMenu.closeMenu();

@@ -1,4 +1,4 @@
-package com.appointphoto.welcome;
+package com.appointphoto.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.appointphoto.activity.MainActivity;
+import com.appointphoto.service.MyService;
 import com.example.appointphoto.R;
 
 public class WelcomeActivity extends Activity {
@@ -17,6 +17,7 @@ public class WelcomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+    	startService(new Intent(this, MyService.class));
         requestWindowFeature(Window.FEATURE_NO_TITLE); //移除ActionBar
         //定义全屏参数
         int flag=WindowManager.LayoutParams.FLAG_FULLSCREEN;
@@ -25,9 +26,6 @@ public class WelcomeActivity extends Activity {
         //设置当前窗体为全屏显示
         window.setFlags(flag, flag);
         setContentView(R.layout.welcome);
-      
-        
-        
         new Handler().postDelayed(new Runnable(){  
             @Override
 			public void run() {  

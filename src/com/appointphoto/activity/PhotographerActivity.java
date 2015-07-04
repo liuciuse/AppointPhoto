@@ -3,6 +3,8 @@ package com.appointphoto.activity;
 import java.util.ArrayList;
 
 import com.appointphoto.activity.util.MyListViewUtil;
+import com.appointphoto.service.MyService;
+import com.appointphoto.widget.PageControl;
 import com.example.appointphoto.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
@@ -37,12 +39,13 @@ public class PhotographerActivity extends Activity {
 	private ViewPager mactivities;
 	private ArrayList views;// 保存了可以滚动的view
 	private LinearLayout emptyactivities;
-	private LinearLayout graph_header;//滚动到顶部
-	
+	private LinearLayout graph_header;// 滚动到顶部
+	private PageControl pagecontrol;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		MyService.allActivity.add(this);
 		requestWindowFeature(Window.FEATURE_NO_TITLE); // 移除ActionBar
 		setContentView(R.layout.photographer_main);
 		// 初始化界面
@@ -77,6 +80,8 @@ public class PhotographerActivity extends Activity {
 					}
 
 				});
+		
+		
 
 		// 初始化数据源
 		adapter = new MyAdapter();
@@ -95,9 +100,12 @@ public class PhotographerActivity extends Activity {
 			View tempView = inflater.inflate(R.layout.list_activity_item,
 					mactivities, false);
 			views.add(tempView);
-			//点击进入服务
+			// 点击进入服务
 			tempView.setOnClickListener(new MyOnClickListener());
 		}
+		//初始化pagecontrol
+		pagecontrol = (PageControl) findViewById(R.id.activity_pagecontrol);
+		pagecontrol.setCount(3);
 
 		// 设置Adapter
 		mactivities.setAdapter(new MyPagerAdapter());
@@ -105,8 +113,8 @@ public class PhotographerActivity extends Activity {
 		mactivities.setOnPageChangeListener(new OnPageChangeListener() {
 
 			@Override
-			public void onPageSelected(int arg0) {
-
+			public void onPageSelected(int position) {
+				pagecontrol.setSelected(position);
 			}
 
 			@Override
@@ -127,9 +135,8 @@ public class PhotographerActivity extends Activity {
 		graph_header = (LinearLayout) findViewById(R.id.graph_header);
 		graph_header.setFocusable(true);
 		graph_header.setFocusableInTouchMode(true);
-		graph_header.requestFocus(); 
+		graph_header.requestFocus();
 	}
-
 
 	// 下拉刷新
 	private class PullRefresh extends AsyncTask<Void, Void, Void> {
@@ -232,14 +239,15 @@ public class PhotographerActivity extends Activity {
 			return views.get(position);
 		}
 	}
-	
-	//点击服务项进入具体服务页面
+
+	// 点击服务项进入具体服务页面
 	private class MyOnClickListener implements View.OnClickListener {
 		@Override
 		public void onClick(View v) {
-			PhotographerActivity.this.startActivity(new Intent(PhotographerActivity.this, ServiceDetailActivity.class));
+			PhotographerActivity.this.startActivity(new Intent(
+					PhotographerActivity.this, ServiceDetailActivity.class));
 		}
-		
+
 	}
 
 }

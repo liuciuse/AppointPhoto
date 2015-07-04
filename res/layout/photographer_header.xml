@@ -18,6 +18,7 @@
     <FrameLayout android:layout_width="fill_parent" android:layout_height="@dimen/photographer_items_height" android:layout_marginTop="@dimen/general_space">
         <RelativeLayout android:background="@android:color/white" android:layout_width="fill_parent" android:layout_height="@dimen/photographer_items_height">
             <android.support.v4.view.ViewPager android:id="@id/photographer_item_viewpager" android:layout_width="fill_parent" android:layout_height="@dimen/photographer_items_height" />
+            <com.appointphoto.widget.PageControl android:orientation="horizontal" android:id="@id/activity_pagecontrol" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="@dimen/general_space" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" />
         </RelativeLayout>
         <LinearLayout android:orientation="vertical" android:id="@id/item_empty_layout" android:layout_width="fill_parent" android:layout_height="@dimen/photographer_items_height">
             <ImageView android:layout_gravity="center_horizontal" android:layout_width="@dimen/photographer_gallery_item_shape" android:layout_height="@dimen/photographer_gallery_item_shape" android:layout_marginTop="@dimen/general_space" android:src="@drawable/item_empty_icon" android:scaleType="centerCrop" />

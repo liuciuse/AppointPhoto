@@ -17,6 +17,7 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appointphoto.service.MyService;
 import com.example.appointphoto.R;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
@@ -39,6 +40,7 @@ public class MainActivity extends FragmentActivity implements
 	/*
 	 * 下面实现按两下返回键退出
 	 */
+	/*
 	private static boolean isExit = false;
 
 	Handler mHandler = new Handler() {
@@ -81,6 +83,26 @@ public class MainActivity extends FragmentActivity implements
 			finish();
 			System.exit(0);
 		}
+	}*/
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (resideMenu.isOpened()) {
+				resideMenu.closeMenu();
+				return false;
+			}
+			MyService.doubleTapToExit(this);
+			return false;
+		} else if (keyCode == KeyEvent.KEYCODE_MENU) {
+			if (resideMenu.isOpened()) {
+				resideMenu.closeMenu();
+			} else {
+				resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+			}
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	/**
@@ -89,6 +111,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		MyService.allActivity.add(this);
 		requestWindowFeature(Window.FEATURE_NO_TITLE); // 移除ActionBar
 		setContentView(R.layout.main);
 		mContext = this;
@@ -126,8 +149,8 @@ public class MainActivity extends FragmentActivity implements
 				R.drawable.menu_icon_invite, "申请为认证摄影师");
 		itemRegAsdresser = new ResideMenuItem(this,
 				R.drawable.menu_icon_invite, "申请为认证化妆师");
-		itemRegAsModel = new ResideMenuItem(this,
-				R.drawable.menu_icon_invite, "申请为认证模特");
+		itemRegAsModel = new ResideMenuItem(this, R.drawable.menu_icon_invite,
+				"申请为认证模特");
 		itemQuit = new ResideMenuItem(this, R.drawable.menu_icon_quit, "退出登录");
 
 		itemHome.setOnClickListener(this);
@@ -140,7 +163,8 @@ public class MainActivity extends FragmentActivity implements
 
 		resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemMine, ResideMenu.DIRECTION_LEFT);
-		resideMenu.addMenuItem(itemRegAsPhotographer, ResideMenu.DIRECTION_LEFT);
+		resideMenu
+				.addMenuItem(itemRegAsPhotographer, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemRegAsdresser, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemRegAsModel, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemSetting, ResideMenu.DIRECTION_LEFT);
@@ -178,9 +202,9 @@ public class MainActivity extends FragmentActivity implements
 		} else if (view == itemRegAsPhotographer) {
 			startActivity(new Intent(this, LoginActivity.class));
 		} else if (view == itemRegAsdresser) {
-			
+
 		} else if (view == itemRegAsModel) {
-			
+
 		}
 
 		resideMenu.closeMenu();

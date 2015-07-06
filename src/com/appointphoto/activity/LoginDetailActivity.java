@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.appointphoto.activity.util.HttpUtil;
+import com.appointphoto.activity.util.MyURI;
 import com.appointphoto.service.MyService;
 import com.example.appointphoto.R;
 
@@ -88,55 +89,31 @@ public class LoginDetailActivity extends Activity {
 		}
 	}
 
-	// http get请求
+	// http post请求
 	class MyThread implements Runnable {
 		public void run() {
 
-			String urlStr = "http://172.16.157.12:8080/AppointPhotoServer/userLoginAction";
+			String urlStr = MyURI.loginURI;
 			JSONObject jsonObject = new JSONObject();
+			String result = null;
+			int []statusCode = new int[1];
 			try {
 				jsonObject.put("name", user_name.getText().toString());
 				jsonObject.put("password", password.getText().toString());
-
-				URL url = new URL(urlStr);
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.setDoOutput(true);
-				connection.setDoInput(true);
-				connection.setRequestMethod("GET");
-				connection.setUseCaches(false);
-				connection.setInstanceFollowRedirects(true);
-
-				connection.setRequestProperty("Content-Type",
-						"application/json");
-				connection.connect();
-				DataOutputStream out = new DataOutputStream(
-						connection.getOutputStream());
-				out.writeBytes(jsonObject.toString());
-				out.flush();
-				out.close();
-				// 读取响应
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(connection.getInputStream()));
-				String lines;
-				StringBuffer sb = new StringBuffer("");
-				while ((lines = reader.readLine()) != null) {
-					lines = new String(lines.getBytes(), "utf-8");
-					sb.append(lines);
-				}
-				System.out.println(sb);
-				reader.close();
+				result = MyURI.uri2Str(urlStr, jsonObject.toString(),statusCode);
+			} catch (JSONException e1) {
+				e1.printStackTrace();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 
 			Message msg = new Message();
-			int statusCode = 0;
-			if (statusCode == 200) {
+			
+			if (statusCode[0] == 200) {
 				msg.what = 1;
 				Bundle b = new Bundle();
-				b.putString("result", "");
+				b.putString("result",result);
 				msg.setData(b);
 			} else {
 				msg.what = 404;

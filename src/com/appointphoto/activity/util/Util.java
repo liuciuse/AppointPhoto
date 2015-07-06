@@ -3,9 +3,12 @@ package com.appointphoto.activity.util;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -14,6 +17,7 @@ import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 public class Util {
@@ -86,14 +90,15 @@ public class Util {
 		return localBitmap;
 	}
 
-	//获取设备高
+	// 获取设备高
 	public static int getDeviceHeight(Activity paramActivity) {
 		DisplayMetrics localDisplayMetrics = new DisplayMetrics();
 		paramActivity.getWindowManager().getDefaultDisplay()
 				.getMetrics(localDisplayMetrics);
 		return localDisplayMetrics.heightPixels;
 	}
-	//获取设备高去掉状态条
+
+	// 获取设备高去掉状态条
 	public static int getDeviceHeightNoStatusBar(Activity paramActivity) {
 		DisplayMetrics localDisplayMetrics = new DisplayMetrics();
 		paramActivity.getWindowManager().getDefaultDisplay()
@@ -107,5 +112,52 @@ public class Util {
 		paramActivity.getWindowManager().getDefaultDisplay()
 				.getMetrics(localDisplayMetrics);
 		return localDisplayMetrics.widthPixels;
+	}
+
+	public static int dip2px(Context paramContext, float paramFloat) {
+		return (int) (0.5F + paramFloat
+				* paramContext.getResources().getDisplayMetrics().density);
+	}
+
+	public static int px2dip(Context paramContext, float paramFloat) {
+		return (int) (0.5F + paramFloat
+				/ paramContext.getResources().getDisplayMetrics().density);
+	}
+
+	// 显示对话框
+	public static void showDlg(Context paramContext, String paramString1,
+			String paramString2) {
+		new AlertDialog.Builder(paramContext).setTitle(paramString1)
+				.setMessage(paramString2).setCancelable(false)
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface paramDialogInterface,
+							int paramInt) {
+						paramDialogInterface.dismiss();
+					}
+				}).create().show();
+	}
+
+	// 显示键盘
+	public static void showKeyboard(Activity paramActivity) {
+		((InputMethodManager) paramActivity.getSystemService("input_method"))
+				.showSoftInputFromInputMethod(paramActivity.getCurrentFocus()
+						.getWindowToken(), 1);
+	}
+	//缩放图片
+	public static Bitmap zoomImg(Bitmap paramBitmap, int paramInt1,
+			int paramInt2) {
+		int i = paramBitmap.getWidth();
+		int j = paramBitmap.getHeight();
+		float f = paramInt1 / i;
+		if (f * j < paramInt2)
+			f = paramInt2 / j;
+		Matrix localMatrix = new Matrix();
+		localMatrix.postScale(f, f);
+		Bitmap localBitmap1 = Bitmap.createBitmap(paramBitmap, 0, 0, i, j,
+				localMatrix, true);
+		Bitmap localBitmap2 = Bitmap.createBitmap(localBitmap1, 0, 0,
+				paramInt1, paramInt2);
+		localBitmap1.recycle();
+		return localBitmap2;
 	}
 }

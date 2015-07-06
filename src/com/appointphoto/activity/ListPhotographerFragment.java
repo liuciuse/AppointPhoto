@@ -1,8 +1,22 @@
 package com.appointphoto.activity;
 
+import java.net.URI;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.json.JSONArray;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,11 +30,25 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.appointphoto.XApplication;
+import com.appointphoto.activity.LoginDetailActivity.MyHandler;
+import com.appointphoto.activity.util.JsonUtil;
+import com.appointphoto.activity.util.MyURI;
+import com.appointphoto.model.Photographer;
 import com.example.appointphoto.R;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.special.ResideMenu.ResideMenu;
 
 /**
@@ -46,12 +74,16 @@ public class ListPhotographerFragment extends Fragment {
 	Button title_bar_item7;
 	Button title_bar_item8;
 
+	private MyHandler myHandler = new MyHandler();;
+	XApplication application;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		this.inflater = inflater;
 		parentView = inflater.inflate(R.layout.homelistview, container, false);
-		adapter = new MyAdapter();
+		adapter = new PSAdapter(getActivity());
+		application = (XApplication) getActivity().getApplication();
 		setUpViews();
 		return parentView;
 	}
@@ -147,52 +179,95 @@ public class ListPhotographerFragment extends Fragment {
 	}
 
 	// 下拉刷新
+	@SuppressLint("NewApi")
 	private class PullRefresh extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			// try {
-			// Thread.sleep(1000);
-			// // 从数据库获取最新数据
-			//
-			// } catch (InterruptedException e) {
-			// }
+			int statusCode[] = new int[1];
+			try {
+				application.setPhotographers(JsonUtil
+						.jsonToPhotographerList(new JSONArray(MyURI.uri2Str(
+								MyURI.RefreshPsURI, MyURI.refreshPts()
+										.toString(), statusCode))));
+			} catch (Exception e) {
+				this.cancel(true);
+				e.printStackTrace();
+			}
 			return null;
 		}
 
 		@Override
+		protected void onCancelled(Void result) {
+			mPullRefreshListView.onRefreshComplete();
+			super.onCancelled(result);
+		}
+
+		@Override
 		protected void onPostExecute(Void result) {
+			((BaseAdapter) adapter).notifyDataSetChanged();
 			mPullRefreshListView.onRefreshComplete();
 			super.onPostExecute(result);
 		}
 	}
 
 	// 上拉加载更多
+	@SuppressLint("NewApi")
 	private class PullupGetMore extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			// try {
-			// Thread.sleep(1000);
-			// // 从数据库加载更多数据
-			//
-			// } catch (InterruptedException e) {
-			// }
+			int statusCode[] = new int[1];
+			try {
+				// 获取更多摄影师信息
+				application.getPhotographers().addAll(
+						JsonUtil.jsonToPhotographerList(new JSONArray(MyURI
+								.uri2Str(MyURI.getmorePsURI, MyURI.morePts()
+										.toString(), statusCode))));
+			} catch (Exception e) {
+				this.cancel(true);
+				e.printStackTrace();
+			}
 			return null;
+		}
+
+		@Override
+		protected void onCancelled(Void result) {
+			mPullRefreshListView.onRefreshComplete();
+			super.onCancelled(result);
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
 			// 滚动到底部
+			((BaseAdapter) adapter).notifyDataSetChanged();
 			mPullRefreshListView.onRefreshComplete();
 			super.onPostExecute(result);
 		}
 	}
 
 	// 设机数据源
-	private class MyAdapter extends BaseAdapter {
+	private class PSAdapter extends BaseAdapter {
+		private Context context;
+		private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
+		private DisplayImageOptions options;
+
+		public PSAdapter(Context context) {
+			this.context  = context;
+			options = new DisplayImageOptions.Builder()
+					.showImageOnLoading(
+							R.drawable.home_photographer_work_default_icon)
+					.showImageForEmptyUri(
+							R.drawable.home_photographer_work_default_icon)
+					.showImageOnFail(
+							R.drawable.home_photographer_work_default_icon)
+					.cacheInMemory(true).cacheOnDisk(true)
+					.considerExifParams(true)
+					.displayer(new RoundedBitmapDisplayer(2)).build();
+			
+		}
 
 		@Override
 		public int getCount() {
-			return 10;
+			return application.getPhotographers().size();
 		}
 
 		@Override
@@ -214,7 +289,7 @@ public class ListPhotographerFragment extends Fragment {
 				holder = new ViewHolder();
 				// 得到各控件的对象
 				holder.avatarImgView = ((ImageView) convertView
-						.findViewById(R.id.avatar_imageView));
+						.findViewById(R.id.user_avatar_image_view));
 				holder.userNameTxtView = ((TextView) convertView
 						.findViewById(R.id.user_nickname_text_view));
 				holder.desTextView = ((TextView) convertView
@@ -240,6 +315,21 @@ public class ListPhotographerFragment extends Fragment {
 				holder = (ViewHolder) convertView.getTag();// 获得暂存的引用
 			}
 			// 设置数据
+			Photographer pg = application.getPhotographers().get(position);
+			ImageLoader.getInstance().displayImage(pg.getAvatar(),
+					holder.avatarImgView, options, animateFirstListener);
+			holder.numLikesTxtView.setText(pg.getNumLikes() + "");
+			holder.numReviewsTxtView.setText(pg.getNumReviews() + "");
+			holder.numWorksTxtView.setText(pg.getNumWorks() + "");
+			holder.priceTxtView.setText(pg.getPrice() + "");
+			holder.priceUnitTxtView.setText(pg.getPriceUnit() + "");
+			holder.userNameTxtView.setText(pg.getNickname() + "");
+			ImageLoader.getInstance().displayImage(
+					pg.getWorkList().get(0).getImageBaseUrl(),
+					holder.workImageView1, options, animateFirstListener);
+			ImageLoader.getInstance().displayImage(pg.getWorkList().get(1)
+					.getImageBaseUrl(),
+					holder.workImageView2, options, animateFirstListener);
 			return convertView;
 		}
 
@@ -321,7 +411,50 @@ public class ListPhotographerFragment extends Fragment {
 		title_bar_item6.setTextColor(getResources().getColor(R.color.black));
 		title_bar_item7.setTextColor(getResources().getColor(R.color.black));
 		title_bar_item8.setTextColor(getResources().getColor(R.color.black));
-		((Button)v).setTextColor(getResources().getColor(R.color.orange));
+		((Button) v).setTextColor(getResources().getColor(R.color.orange));
+	}
+
+	// 处理异步回调
+	class MyHandler extends Handler {
+		public MyHandler() {
+		}
+
+		public MyHandler(Looper L) {
+			super(L);
+		}
+
+		// 子类必须重写此方法，接受数据
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			if (msg.what == 1) {
+				Bundle b = msg.getData();
+				String reslut = b.getString("result");
+			} else if (msg.what == 404) {
+				// 获取数据失败
+			}
+
+		}
+	}
+
+	private static class AnimateFirstDisplayListener extends
+			SimpleImageLoadingListener {
+
+		static final List<String> displayedImages = Collections
+				.synchronizedList(new LinkedList<String>());
+
+		@Override
+		public void onLoadingComplete(String imageUri, View view,
+				Bitmap loadedImage) {
+			if (loadedImage != null) {
+				ImageView imageView = (ImageView) view;
+				boolean firstDisplay = !displayedImages.contains(imageUri);
+				if (firstDisplay) {
+					FadeInBitmapDisplayer.animate(imageView, 500);
+					displayedImages.add(imageUri);
+				}
+			}
+		}
 	}
 
 }

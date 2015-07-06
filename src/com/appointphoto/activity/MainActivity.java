@@ -17,6 +17,7 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appointphoto.activity.util.Util;
 import com.appointphoto.service.MyService;
 import com.example.appointphoto.R;
 import com.special.ResideMenu.ResideMenu;
@@ -36,54 +37,6 @@ public class MainActivity extends FragmentActivity implements
 	private ResideMenuItem itemRegAsdresser;
 	private TextView headerName;
 
-	// 定义一个变量，来标识是否退出
-	/*
-	 * 下面实现按两下返回键退出
-	 */
-	/*
-	private static boolean isExit = false;
-
-	Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			isExit = false;
-		}
-	};
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (resideMenu.isOpened()) {
-				resideMenu.closeMenu();
-				return false;
-			}
-			exit2();
-			return false;
-		} else if (keyCode == KeyEvent.KEYCODE_MENU) {
-			if (resideMenu.isOpened()) {
-				resideMenu.closeMenu();
-			} else {
-				resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
-			}
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-
-	private void exit2() {
-		if (!isExit) {
-			isExit = true;
-			Toast.makeText(getApplicationContext(), "再按一次退出程序",
-					Toast.LENGTH_SHORT).show();
-			// 利用handler延迟发送更改状态信息
-			mHandler.sendEmptyMessageDelayed(0, 2000);
-		} else {
-			finish();
-			System.exit(0);
-		}
-	}*/
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -202,7 +155,7 @@ public class MainActivity extends FragmentActivity implements
 		} else if (view == itemRegAsPhotographer) {
 			startActivity(new Intent(this, LoginActivity.class));
 		} else if (view == itemRegAsdresser) {
-
+			Util.showDlg(this, "dress", "你真的确定");
 		} else if (view == itemRegAsModel) {
 
 		}

@@ -1,6 +1,15 @@
 package com.appointphoto.activity.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
+
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,7 +26,9 @@ import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Util {
@@ -143,7 +154,8 @@ public class Util {
 				.showSoftInputFromInputMethod(paramActivity.getCurrentFocus()
 						.getWindowToken(), 1);
 	}
-	//Àı∑≈Õº∆¨
+
+	// Àı∑≈Õº∆¨
 	public static Bitmap zoomImg(Bitmap paramBitmap, int paramInt1,
 			int paramInt2) {
 		int i = paramBitmap.getWidth();
@@ -160,4 +172,13 @@ public class Util {
 		localBitmap1.recycle();
 		return localBitmap2;
 	}
+
+	public static InputStream Bitmap2IS(Bitmap bm) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		InputStream sbs = new ByteArrayInputStream(baos.toByteArray());
+		return sbs;
+	}
+
+
 }

@@ -11,11 +11,12 @@ import org.json.JSONObject;
 
 public class MyURI {
 	public static final String loginURI = "http://172.16.157.12:8080/AppointPhotoServer/userLoginAction";
-	public static final String photographersURI = "http://172.16.157.12:8080/AppointPhotoServer/userLoginAction";
-	public static final String RefreshPsURI = "http://liuciuse:8080/mytest/jsontest";
-	public static final String getmorePsURI = "http://liuciuse:8080/mytest/jsontest";
-	public static final String testPtURI = "http://pic1.nipic.com/2008-09-08/200898163242920_2.jpg";
-	public static final String testavaterURI = "http://pic1.nipic.com/2008-09-08/200898163242920_2.jpg";
+	public static final String photographersURI = "http://172.16.157.18:8080/mytest/jsontest";
+	public static final String RefreshPsURI = "http://172.16.157.18:8080/mytest/jsontest";
+	public static final String getmorePsURI = "http://172.16.157.18:8080/mytest/jsontest";
+	public static final String testPtURI = "http://picapi.ooopic.com/10/61/91/29b1OOOPIC90.jpg";
+	public static final String testavaterURI = "http://img4q.duitang.com/uploads/item/201405/30/20140530154218_TszCx.thumb.700_0.jpeg";
+	public static final String registerURI = "http://172.16.157.12:8080/AppointPhotoServer/UserUploadImageAction";
 	
 	//·ÃÎÊURI»ñÈ¡json×Ö·û´®
 	public static String uri2Str(String urlStr,String jsonStr,int []statusCode) throws Exception {
@@ -31,7 +32,7 @@ public class MyURI {
 			connection.setRequestMethod("GET");
 			connection.setUseCaches(false);
 			connection.setInstanceFollowRedirects(true);
-			connection.setConnectTimeout(30000);
+			connection.setConnectTimeout(5000);
 			
 			connection.setRequestProperty("Content-Type",
 					"application/json");

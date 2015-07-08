@@ -1,13 +1,20 @@
 package com.appointphoto.activity;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.json.JSONArray;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -16,13 +23,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.appointphoto.activity.util.JsonUtil;
+import com.appointphoto.activity.util.MyURI;
 import com.appointphoto.activity.util.Util;
+import com.appointphoto.activity.util.fileupload.FormFile;
+import com.appointphoto.activity.util.fileupload.SocketHttpRequester;
 import com.appointphoto.service.MyService;
 import com.example.appointphoto.R;
 
@@ -45,6 +57,7 @@ public class RegisterActivity extends Activity {
 	private Bitmap workBitmap2;
 	private Bitmap workBitmap3;
 	PopupWindow popupWindow;
+	ProgressDialog mypDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +103,7 @@ public class RegisterActivity extends Activity {
 		finishbtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				register();//注册
+				register();// 注册
 			}
 
 		});
@@ -99,50 +112,66 @@ public class RegisterActivity extends Activity {
 		contactEditText = (EditText) findViewById(R.id.contact_editText);
 		infoEditText = (EditText) findViewById(R.id.info_editText);
 		inviteEditText = (EditText) findViewById(R.id.invite_editText);
+		// 网络请求时显示进度
+		initDialog();
 	}
-	
-	//注册
+
+	//注册对话框
+	private void initDialog() {
+		mypDialog = new ProgressDialog(this);
+		// 设置进度条风格，风格为圆形，旋转的
+		mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		// 设置ProgressDialog 标题
+		mypDialog.setTitle("注册");
+		mypDialog.setMessage("正在注册...");
+		// 设置ProgressDialog 的进度条是否不明确
+		mypDialog.setIndeterminate(false);
+		// 设置ProgressDialog 是否可以按退回按键取消
+		mypDialog.setCancelable(false);
+	}
+
+	// 注册
 	private void register() {
-		if (this.nameEditText.getText().toString().replace(" ", "").length() <= 0)
-	    {
-	      Util.showShortToast(getApplicationContext(), "姓名不能为空！");
-	      return;
-	    }
-	    if (this.genderbtn.getText().equals("性别"))
-	    {
-	      Util.showShortToast(getApplicationContext(), "请选择性别！");
-	      return;
-	    }
-//	    if (this.locationBtn.getText().equals("所在地"))
-//	    {
-//	      Util.showShortToast(getApplicationContext(), "请选择所在地！");
-//	      return;
-//	    }
-	    if (this.contactEditText.getText().toString().replace(" ", "").length() <= 0)
-	    {
-	      Util.showShortToast(getApplicationContext(), "联系电话不能为空！");
-	      return;
-	    }
-	    if (!Util.isValidMobilePhoneNum(this.contactEditText.getText().toString()))
-	    {
-	      Util.showShortToast(getApplicationContext(), "联系电话格式不对！");
-	      return;
-	    }
-	    if (this.conformBitmap == null)
-	    {
-	      Util.showShortToast(getApplicationContext(), "认证照片不能为空！");
-	      return;
-	    }
-	    if ((this.workBitmap1 == null) || (this.workBitmap2 == null) || (this.workBitmap3 == null))
-	    {
-	      Util.showShortToast(getApplicationContext(), "必须上传三幅作品！");
-	      return;
-	    }
-	    if (!Util.isNetWorkAvailable(this))
-	    {
-	      Util.showShortToast(this, "当前网络不能用！");
-	      return;
-	    }
+		// if (this.nameEditText.getText().toString().replace(" ", "").length()
+		// <= 0) {
+		// Util.showShortToast(getApplicationContext(), "姓名不能为空！");
+		// return;
+		// }
+		// if (this.genderbtn.getText().equals("性别")) {
+		// Util.showShortToast(getApplicationContext(), "请选择性别！");
+		// return;
+		// }
+		// // if (this.locationBtn.getText().equals("所在地"))
+		// // {
+		// // Util.showShortToast(getApplicationContext(), "请选择所在地！");
+		// // return;
+		// // }
+		// if (this.contactEditText.getText().toString().replace(" ",
+		// "").length() <= 0) {
+		// Util.showShortToast(getApplicationContext(), "联系电话不能为空！");
+		// return;
+		// }
+		// if (!Util.isValidMobilePhoneNum(this.contactEditText.getText()
+		// .toString())) {
+		// Util.showShortToast(getApplicationContext(), "联系电话格式不对！");
+		// return;
+		// }
+		// if (this.conformBitmap == null) {
+		// Util.showShortToast(getApplicationContext(), "认证照片不能为空！");
+		// return;
+		// }
+		// if ((this.workBitmap1 == null) || (this.workBitmap2 == null)
+		// || (this.workBitmap3 == null)) {
+		// Util.showShortToast(getApplicationContext(), "必须上传三幅作品！");
+		// return;
+		// }
+		// if (!Util.isNetWorkAvailable(this)) {
+		// Util.showShortToast(this, "当前网络不能用！");
+		// return;
+		// }
+		//注册
+		new RegisterRequest().execute();
+		mypDialog.show();
 	}
 
 	// 拍摄个人身份证信息
@@ -174,8 +203,8 @@ public class RegisterActivity extends Activity {
 				popupWindow.dismiss();
 			}
 		});
-		popupWindow = new PopupWindow(contentView,
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
+		popupWindow = new PopupWindow(contentView, LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT, true);
 		popupWindow.setTouchable(true);
 		popupWindow.setTouchInterceptor(new View.OnTouchListener() {
 			@Override
@@ -206,7 +235,7 @@ public class RegisterActivity extends Activity {
 				conformBitmap = bitmap;
 			}
 			break;
-		case 11:// 获取所拍摄过美图作品
+		case 11:// 获取所拍摄过作品
 			if (resultCode == RESULT_OK) {
 				Uri uri = data.getData();
 				Log.e("uri", uri.toString());
@@ -221,7 +250,7 @@ public class RegisterActivity extends Activity {
 				}
 			}
 			break;
-		case 12:// 获取所拍摄过美图作品
+		case 12:// 获取所拍摄过作品
 			if (resultCode == RESULT_OK) {
 				Uri uri = data.getData();
 				Log.e("uri", uri.toString());
@@ -236,7 +265,7 @@ public class RegisterActivity extends Activity {
 				}
 			}
 			break;
-		case 13:// 获取所拍摄过美图作品
+		case 13:// 获取所拍摄过作品
 			if (resultCode == RESULT_OK) {
 				Uri uri = data.getData();
 				Log.e("uri", uri.toString());
@@ -258,7 +287,7 @@ public class RegisterActivity extends Activity {
 
 	}
 
-	// 上次个人作品
+	// 上传个人作品
 	public class MyPhotoOnClickListener implements View.OnClickListener {
 		@Override
 		public void onClick(View v) {
@@ -287,6 +316,61 @@ public class RegisterActivity extends Activity {
 			}
 		}
 
+	}
+	
+	//注册请求
+	@SuppressLint("NewApi")
+	private class RegisterRequest extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			int statusCode[] = new int[1];
+			try {
+				// 发送注册请求
+				String requestUrl = MyURI.registerURI;
+				// 请求普通信息
+				Map<String, String> params2 = new HashMap<String, String>();
+				String fileName1 = "fileName1";
+				String fileName2 = "fileName2";
+				params2.put("name", "张三");
+				params2.put("fileName1", fileName1);
+				params2.put("fileName2", fileName2);
+				FormFile formfile1 = new FormFile(fileName1,
+						Util.Bitmap2IS(workBitmap1), "image1",
+						"application/octet-stream");
+				FormFile formfile2 = new FormFile(fileName2,
+						Util.Bitmap2IS(workBitmap2), "image2",
+						"application/octet-stream");
+				FormFile[] formfiles = new FormFile[2];
+				formfiles[0] = formfile1;
+				formfiles[1] = formfile2;
+
+				try {
+					SocketHttpRequester.post(requestUrl, params2, formfiles);
+				} catch (Exception e) {
+					e.printStackTrace();
+					this.cancel(true);
+				}
+			} catch (Exception e) {
+				this.cancel(true);
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onCancelled(Void result) {
+			if (!Util.isNetWorkAvailable(RegisterActivity.this)) {
+				Util.showShortToast(RegisterActivity.this, "网络未连接");
+			}
+			mypDialog.cancel();
+			super.onCancelled(result);
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			mypDialog.cancel();
+		}
 	}
 
 }

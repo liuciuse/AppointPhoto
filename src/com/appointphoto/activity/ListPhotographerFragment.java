@@ -27,13 +27,15 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.appointphoto.XApplication;
 import com.appointphoto.activity.LoginDetailActivity.MyHandler;
+import com.appointphoto.activity.util.ImageLoaderUtil;
 import com.appointphoto.activity.util.JsonUtil;
 import com.appointphoto.activity.util.MyURI;
+import com.appointphoto.activity.util.Util;
+import com.appointphoto.adapter.PhotographerAdapter;
 import com.appointphoto.model.Photographer;
 import com.example.appointphoto.R;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -59,7 +61,7 @@ public class ListPhotographerFragment extends Fragment {
 	private View parentView;// 整个界面
 	private ResideMenu resideMenu;// 侧栏
 	private PullToRefreshListView mPullRefreshListView;// 可刷新listview
-	private ListAdapter adapter;
+	private PhotographerAdapter adapter;
 	private LayoutInflater inflater;
 	private MainActivity parentActivity;
 
@@ -82,7 +84,7 @@ public class ListPhotographerFragment extends Fragment {
 			Bundle savedInstanceState) {
 		this.inflater = inflater;
 		parentView = inflater.inflate(R.layout.homelistview, container, false);
-		adapter = new PSAdapter(getActivity());
+		adapter = new PhotographerAdapter(getActivity());
 		application = (XApplication) getActivity().getApplication();
 		setUpViews();
 		return parentView;
@@ -185,7 +187,7 @@ public class ListPhotographerFragment extends Fragment {
 		protected Void doInBackground(Void... params) {
 			int statusCode[] = new int[1];
 			try {
-				application.setPhotographers(JsonUtil
+				adapter.setPhotographers(JsonUtil
 						.jsonToPhotographerList(new JSONArray(MyURI.uri2Str(
 								MyURI.RefreshPsURI, MyURI.refreshPts()
 										.toString(), statusCode))));
@@ -198,6 +200,11 @@ public class ListPhotographerFragment extends Fragment {
 
 		@Override
 		protected void onCancelled(Void result) {
+			if (!Util.isNetWorkAvailable(application)) {
+				Util.showShortToast(application, "网络未连接");
+			} else {
+				Util.showShortToast(application, "汗,服务器失联了");
+			}
 			mPullRefreshListView.onRefreshComplete();
 			super.onCancelled(result);
 		}
@@ -218,7 +225,7 @@ public class ListPhotographerFragment extends Fragment {
 			int statusCode[] = new int[1];
 			try {
 				// 获取更多摄影师信息
-				application.getPhotographers().addAll(
+				adapter.getPhotographers().addAll(
 						JsonUtil.jsonToPhotographerList(new JSONArray(MyURI
 								.uri2Str(MyURI.getmorePsURI, MyURI.morePts()
 										.toString(), statusCode))));
@@ -231,7 +238,13 @@ public class ListPhotographerFragment extends Fragment {
 
 		@Override
 		protected void onCancelled(Void result) {
+			if (!Util.isNetWorkAvailable(application)) {
+				Util.showShortToast(application, "网络未连接");
+			} else {
+				Util.showShortToast(application, "汗,服务器失联了");
+			}
 			mPullRefreshListView.onRefreshComplete();
+			
 			super.onCancelled(result);
 		}
 
@@ -244,119 +257,6 @@ public class ListPhotographerFragment extends Fragment {
 		}
 	}
 
-	// 设机数据源
-	private class PSAdapter extends BaseAdapter {
-		private Context context;
-		private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
-		private DisplayImageOptions options;
-
-		public PSAdapter(Context context) {
-			this.context  = context;
-			options = new DisplayImageOptions.Builder()
-					.showImageOnLoading(
-							R.drawable.home_photographer_work_default_icon)
-					.showImageForEmptyUri(
-							R.drawable.home_photographer_work_default_icon)
-					.showImageOnFail(
-							R.drawable.home_photographer_work_default_icon)
-					.cacheInMemory(true).cacheOnDisk(true)
-					.considerExifParams(true)
-					.displayer(new RoundedBitmapDisplayer(2)).build();
-			
-		}
-
-		@Override
-		public int getCount() {
-			return application.getPhotographers().size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return position;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup container) {
-			ViewHolder holder;
-			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.list_photographer_item,
-						container, false);
-				holder = new ViewHolder();
-				// 得到各控件的对象
-				holder.avatarImgView = ((ImageView) convertView
-						.findViewById(R.id.user_avatar_image_view));
-				holder.userNameTxtView = ((TextView) convertView
-						.findViewById(R.id.user_nickname_text_view));
-				holder.desTextView = ((TextView) convertView
-						.findViewById(R.id.user_description_text_view));
-				holder.priceTxtView = ((TextView) convertView
-						.findViewById(R.id.price_text_view));
-				holder.priceUnitTxtView = ((TextView) convertView
-						.findViewById(R.id.price_unit_text_view));
-				holder.tagTxtView = ((TextView) convertView
-						.findViewById(R.id.photographer_tags_text_view));
-				holder.workImageView1 = ((ImageView) convertView
-						.findViewById(R.id.work_image_view_1));
-				holder.workImageView2 = ((ImageView) convertView
-						.findViewById(R.id.work_image_view_2));
-				holder.numWorksTxtView = ((TextView) convertView
-						.findViewById(R.id.home_num_work_textV));
-				holder.numLikesTxtView = ((TextView) convertView
-						.findViewById(R.id.home_num_like_textV));
-				holder.numReviewsTxtView = ((TextView) convertView
-						.findViewById(R.id.home_num_review_textV));
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();// 获得暂存的引用
-			}
-			// 设置数据
-			Photographer pg = application.getPhotographers().get(position);
-			ImageLoader.getInstance().displayImage(pg.getAvatar(),
-					holder.avatarImgView, options, animateFirstListener);
-			holder.numLikesTxtView.setText(pg.getNumLikes() + "");
-			holder.numReviewsTxtView.setText(pg.getNumReviews() + "");
-			holder.numWorksTxtView.setText(pg.getNumWorks() + "");
-			holder.priceTxtView.setText(pg.getPrice() + "");
-			holder.priceUnitTxtView.setText(pg.getPriceUnit() + "");
-			holder.userNameTxtView.setText(pg.getNickname() + "");
-			ImageLoader.getInstance().displayImage(
-					pg.getWorkList().get(0).getImageBaseUrl(),
-					holder.workImageView1, options, animateFirstListener);
-			ImageLoader.getInstance().displayImage(pg.getWorkList().get(1)
-					.getImageBaseUrl(),
-					holder.workImageView2, options, animateFirstListener);
-			return convertView;
-		}
-
-		@Override
-		public boolean isEnabled(int position) {
-			return true;
-		}
-
-		// 暂存item view中的控件引用
-		public class ViewHolder {
-			ImageView avatarImgView;
-			TextView desTextView;
-			TextView numLikesTxtView;
-			TextView numReviewsTxtView;
-			TextView numWorksTxtView;
-			TextView priceTxtView;
-			TextView priceUnitTxtView;
-			TextView tagTxtView;
-			TextView userNameTxtView;
-			ImageView workImageView1;
-			ImageView workImageView2;
-
-			private ViewHolder() {
-			}
-		}
-
-	}
 
 	// 选择类别处理
 	public class MyBtnClickListener implements View.OnClickListener {
@@ -437,24 +337,6 @@ public class ListPhotographerFragment extends Fragment {
 		}
 	}
 
-	private static class AnimateFirstDisplayListener extends
-			SimpleImageLoadingListener {
-
-		static final List<String> displayedImages = Collections
-				.synchronizedList(new LinkedList<String>());
-
-		@Override
-		public void onLoadingComplete(String imageUri, View view,
-				Bitmap loadedImage) {
-			if (loadedImage != null) {
-				ImageView imageView = (ImageView) view;
-				boolean firstDisplay = !displayedImages.contains(imageUri);
-				if (firstDisplay) {
-					FadeInBitmapDisplayer.animate(imageView, 500);
-					displayedImages.add(imageUri);
-				}
-			}
-		}
-	}
+	
 
 }

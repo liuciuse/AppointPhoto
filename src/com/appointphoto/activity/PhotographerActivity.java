@@ -2,6 +2,7 @@ package com.appointphoto.activity;
 
 import java.util.ArrayList;
 
+import com.appointphoto.XApplication;
 import com.appointphoto.activity.util.MyListViewUtil;
 import com.appointphoto.service.MyService;
 import com.appointphoto.widget.PageControl;
@@ -41,11 +42,13 @@ public class PhotographerActivity extends Activity {
 	private LinearLayout emptyactivities;
 	private LinearLayout graph_header;// 滚动到顶部
 	private PageControl pagecontrol;
+	private XApplication application;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		MyService.allActivity.add(this);
+		application = (XApplication) getApplication();
 		requestWindowFeature(Window.FEATURE_NO_TITLE); // 移除ActionBar
 		setContentView(R.layout.photographer_main);
 		// 初始化界面
@@ -119,7 +122,7 @@ public class PhotographerActivity extends Activity {
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-
+				
 			}
 
 			@Override
@@ -209,7 +212,8 @@ public class PhotographerActivity extends Activity {
 		// 暂存item view中的控件引用
 		public class ViewHolder {
 
-			private ViewHolder() {
+			public ViewHolder() {
+				
 			}
 		}
 

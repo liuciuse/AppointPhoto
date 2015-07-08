@@ -39,7 +39,7 @@ public class User implements Serializable {
 			return;
 		this.avatar = paramJSONObject.optString("avatar_url", MyURI.testavaterURI);
 		this.id = paramJSONObject.optString("id", "");
-		this.nickname = paramJSONObject.optString("nickname", "");
+		this.nickname = paramJSONObject.optString("nickname", "ะกร๗");
 		this.primaryAccount = paramJSONObject.optString("primary_account", "");
 		this.profileImageUrl = paramJSONObject.optString("profile_image_url",
 				"");

@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//提供的服务
 public class XItem implements Serializable {
 	private String albumInfo;
 	private String category;

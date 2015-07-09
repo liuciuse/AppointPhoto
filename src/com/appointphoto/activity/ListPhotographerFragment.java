@@ -63,7 +63,7 @@ public class ListPhotographerFragment extends Fragment {
 	private PullToRefreshListView mPullRefreshListView;// 可刷新listview
 	private PhotographerAdapter adapter;
 	private LayoutInflater inflater;
-	private MainActivity parentActivity;
+	private Context context;
 
 	// 所有类别
 	Button title_bar_item0;
@@ -77,7 +77,6 @@ public class ListPhotographerFragment extends Fragment {
 	Button title_bar_item8;
 
 	private MyHandler myHandler = new MyHandler();;
-	XApplication application;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,13 +84,13 @@ public class ListPhotographerFragment extends Fragment {
 		this.inflater = inflater;
 		parentView = inflater.inflate(R.layout.homelistview, container, false);
 		adapter = new PhotographerAdapter(getActivity());
-		application = (XApplication) getActivity().getApplication();
 		setUpViews();
 		return parentView;
 	}
 
 	private void setUpViews() {
-		parentActivity = (MainActivity) getActivity();
+		context = (MainActivity) getActivity();
+		MainActivity parentActivity = (MainActivity) context;
 		resideMenu = parentActivity.getResideMenu();
 
 		// add gesture operation's ignored views 水平滚动条不触发菜单手势
@@ -142,8 +141,8 @@ public class ListPhotographerFragment extends Fragment {
 					public void onItemClick(AdapterView<?> container,
 							View view, int position, long id) {
 						// 设置点击摄影师后，打开摄影师主界面
-						Intent mIntent = new Intent(parentActivity,
-								PhotographerActivity.class);
+						Intent mIntent = new Intent(context,
+								PhotographerActivityEx.class);
 						startActivity(mIntent);
 
 					}
@@ -200,10 +199,10 @@ public class ListPhotographerFragment extends Fragment {
 
 		@Override
 		protected void onCancelled(Void result) {
-			if (!Util.isNetWorkAvailable(application)) {
-				Util.showShortToast(application, "网络未连接");
+			if (!Util.isNetWorkAvailable(getActivity())) {
+				Util.showShortToast(context, "网络未连接");
 			} else {
-				Util.showShortToast(application, "汗,服务器失联了");
+				Util.showShortToast(context, "汗,服务器失联了");
 			}
 			mPullRefreshListView.onRefreshComplete();
 			super.onCancelled(result);
@@ -238,10 +237,10 @@ public class ListPhotographerFragment extends Fragment {
 
 		@Override
 		protected void onCancelled(Void result) {
-			if (!Util.isNetWorkAvailable(application)) {
-				Util.showShortToast(application, "网络未连接");
+			if (!Util.isNetWorkAvailable(context)) {
+				Util.showShortToast(context, "网络未连接");
 			} else {
-				Util.showShortToast(application, "汗,服务器失联了");
+				Util.showShortToast(context, "汗,服务器失联了");
 			}
 			mPullRefreshListView.onRefreshComplete();
 			

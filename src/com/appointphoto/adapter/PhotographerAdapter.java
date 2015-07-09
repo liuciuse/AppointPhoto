@@ -22,23 +22,14 @@ import android.widget.TextView;
 public class PhotographerAdapter extends BaseAdapter {
 
 	private Context context;
-	private ImageLoadingListener animateFirstListener = new ImageLoaderUtil.AnimateFirstDisplayListener();
-	private DisplayImageOptions options;
+	private ImageLoadingListener animateFirstListener;
 	// 摄影师集合
 	private List<Photographer> photographers = new ArrayList<Photographer>();
 	LayoutInflater inflater ;
 
 	public PhotographerAdapter(Context context) {
 		this.context = context;
-		options = new DisplayImageOptions.Builder()
-				.showImageOnLoading(
-						R.drawable.home_photographer_work_default_icon)
-				.showImageForEmptyUri(
-						R.drawable.home_photographer_work_default_icon)
-				.showImageOnFail(R.drawable.home_photographer_work_default_icon)
-				.cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-				.displayer(new RoundedBitmapDisplayer(2)).build();
-
+		animateFirstListener = new ImageLoaderUtil.AnimateFirstDisplayListener(context);
 		inflater = LayoutInflater.from(context);
 	}
 
@@ -63,13 +54,6 @@ public class PhotographerAdapter extends BaseAdapter {
 		this.animateFirstListener = animateFirstListener;
 	}
 
-	public DisplayImageOptions getOptions() {
-		return options;
-	}
-
-	public void setOptions(DisplayImageOptions options) {
-		this.options = options;
-	}
 
 	public List<Photographer> getPhotographers() {
 		return photographers;
@@ -134,7 +118,7 @@ public class PhotographerAdapter extends BaseAdapter {
 		// 设置数据
 		Photographer pg = photographers.get(position);
 		ImageLoader.getInstance().displayImage(pg.getAvatar(),
-				holder.avatarImgView, options, animateFirstListener);
+				holder.avatarImgView, ImageLoaderUtil.options, animateFirstListener);
 		holder.numLikesTxtView.setText(pg.getNumLikes() + "");
 		holder.numReviewsTxtView.setText(pg.getNumReviews() + "");
 		holder.numWorksTxtView.setText(pg.getNumWorks() + "");
@@ -148,10 +132,10 @@ public class PhotographerAdapter extends BaseAdapter {
 		holder.tagTxtView.setText(tagTxt);
 		ImageLoader.getInstance().displayImage(
 				pg.getWorkList().get(0).getImageBaseUrl(),
-				holder.workImageView1, options, animateFirstListener);
+				holder.workImageView1, ImageLoaderUtil.options, animateFirstListener);
 		ImageLoader.getInstance().displayImage(
 				pg.getWorkList().get(1).getImageBaseUrl(),
-				holder.workImageView2, options, animateFirstListener);
+				holder.workImageView2, ImageLoaderUtil.options, animateFirstListener);
 		return convertView;
 	}
 
@@ -161,7 +145,7 @@ public class PhotographerAdapter extends BaseAdapter {
 	}
 
 	// 暂存item view中的控件引用
-	public class ViewHolder {
+	public static class ViewHolder {
 		ImageView avatarImgView;
 		TextView desTextView;
 		TextView numLikesTxtView;

@@ -20,6 +20,8 @@ public class Work implements Serializable {
 	private int numLikes;//喜欢数
 	private int numReviews;//评论数
 	private String updatedAt;
+	private String imgheight;//图像高度
+	private String imgwidth;//图像宽度
 
 	// 作品
 	public Work(JSONObject paramJSONObject) {
@@ -31,12 +33,16 @@ public class Work implements Serializable {
 		this.createdAt = paramJSONObject.optString("created_at", "");
 		this.updatedAt = paramJSONObject.optString("updated_at", "");
 		this.category = paramJSONObject.optString("item_category", "");
-		ArrayList localArrayList = new ArrayList();
-		JSONArray localJSONArray = paramJSONObject.optJSONArray("labels");
 		this.imageBaseUrl = paramJSONObject.optString("image_base_url",
 				MyURI.testPtURI);
 		this.numLikes = paramJSONObject.optInt("num_likes", 0);
 		this.numReviews = paramJSONObject.optInt("num_reviews", 0);
+		this.imgheight = paramJSONObject.optString("imgheight", "1024");
+		this.imgwidth = paramJSONObject.optString("imgwidth", "1024");
+		
+		
+		JSONArray localJSONArray = paramJSONObject.optJSONArray("labels");
+		ArrayList localArrayList = new ArrayList();
 		int i = 0;
 		this.labels = localArrayList;
 		if (localJSONArray == null) {
@@ -57,6 +63,23 @@ public class Work implements Serializable {
 				localJSONException.printStackTrace();
 			}
 		}
+		
+	}
+
+	public String getImgheight() {
+		return imgheight;
+	}
+
+	public void setImgheight(String imgheight) {
+		this.imgheight = imgheight;
+	}
+
+	public String getImgwidth() {
+		return imgwidth;
+	}
+
+	public void setImgwidth(String imgwidth) {
+		this.imgwidth = imgwidth;
 	}
 
 	public String getCategory() {

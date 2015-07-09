@@ -68,4 +68,25 @@ public class JsonUtil {
 			}
 		}
 	}
+
+	//获取作品列表
+	public static List<Work> jsonToWorklist(JSONArray paramJSONArray) {
+		ArrayList localArrayList = new ArrayList();
+	    int i = paramJSONArray.length();
+	    int j = 0;
+	    while (true)
+	    {
+	      if (j >= i)
+	        return localArrayList;
+	      try
+	      {
+	        localArrayList.add(new Work((JSONObject)paramJSONArray.get(j)));
+	        j++;
+	      }
+	      catch (JSONException localJSONException)
+	      {
+	          localJSONException.printStackTrace();
+	      }
+	    }
+	}
 }

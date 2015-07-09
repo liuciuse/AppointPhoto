@@ -65,10 +65,9 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.appointphoto.activity.PhotographerActivity"
+            android:name="com.appointphoto.nouse.PhotographerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
-            
         </activity>
         <activity
             android:name="com.appointphoto.activity.SettingActivity"
@@ -97,6 +96,11 @@
         </activity>
         <activity
             android:name="com.appointphoto.activity.LoginDetailActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.appointphoto.activity.PhotographerActivityEx"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>

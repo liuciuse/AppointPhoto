@@ -118,6 +118,7 @@ public class Util {
 				- getStatusBarHeight(paramActivity);
 	}
 
+	//获取设备宽
 	public static int getDeviceWidth(Activity paramActivity) {
 		DisplayMetrics localDisplayMetrics = new DisplayMetrics();
 		paramActivity.getWindowManager().getDefaultDisplay()

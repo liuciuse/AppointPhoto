@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -130,6 +131,14 @@ public class MainActivity extends FragmentActivity implements
 						resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
 					}
 				});
+		//设置头像
+		ImageView avarimg = (ImageView) resideMenu.findViewById(R.id.user_avatar_image_view);
+		avarimg.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				startActivity(new Intent(MainActivity.this, LoginActivity.class));
+			}
+		});
 	}
 
 	// 控制侧边栏的默认行为

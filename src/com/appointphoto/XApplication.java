@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 
 //全局的
@@ -28,22 +29,8 @@ public class XApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		makeconfig();
+		initImageLoader(getApplicationContext());
 	}
-
-	private void makeconfig() {
-		// 配置ImageLoader
-		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-				.cacheInMemory().cacheOnDisc().build();
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-				this).defaultDisplayImageOptions(defaultOptions)
-				.threadPriority(Thread.NORM_PRIORITY - 2)
-				.denyCacheImageMultipleSizesInMemory()
-				.discCacheFileNameGenerator(new Md5FileNameGenerator())
-				.tasksProcessingOrder(QueueProcessingType.LIFO).build();
-		ImageLoader.getInstance().init(config);
-	}
-
 
 	// 应用终止时，关闭服务
 	public void onTerminate() {
@@ -57,6 +44,23 @@ public class XApplication extends Application {
 
 	public void setUser(User paramUser) {
 		this.user = paramUser;
+	}
+	
+	public static void initImageLoader(Context context) {
+		// This configuration tuning is custom. You can tune every option, you may tune some of them,
+		// or you can create default configuration by
+		//  ImageLoaderConfiguration.createDefault(this);
+		// method.
+		ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
+		config.threadPriority(Thread.NORM_PRIORITY - 2);
+		config.denyCacheImageMultipleSizesInMemory();
+		config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+		config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+		config.tasksProcessingOrder(QueueProcessingType.LIFO);
+		config.writeDebugLogs(); // Remove for release app
+
+		// Initialize ImageLoader with configuration.
+		ImageLoader.getInstance().init(config.build());
 	}
 
 }

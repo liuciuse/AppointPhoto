@@ -2,9 +2,11 @@ package com.appointphoto.adapter;
 
 import java.util.ArrayList;
 
+import com.appointphoto.activity.ServiceDetailActivity;
 import com.example.appointphoto.R;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +56,7 @@ public class ServicePagerAdapter extends PagerAdapter {
 	class MyOnClickListener implements View.OnClickListener {
 		@Override
 		public void onClick(View v) {
-
+			context.startActivity(new Intent(context,ServiceDetailActivity.class));
 		}
 
 	}

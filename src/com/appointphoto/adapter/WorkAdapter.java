@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 import com.appointphoto.activity.util.ImageLoaderUtil;
 import com.appointphoto.activity.util.Util;
 import com.appointphoto.model.Work;
@@ -28,12 +30,14 @@ public class WorkAdapter extends BaseAdapter {
 	private List<Work> workList = new ArrayList<Work>();
 	private LayoutInflater inflater;
 	private ImageLoadingListener animateFirstListener;
+	private PhotoViewAttacher mAttacher;
 
 	public WorkAdapter(Context paramContext) {
 		this.mContext = paramContext;
 		animateFirstListener = new ImageLoaderUtil.AnimateFirstDisplayListener(
 				mContext);
 		inflater = LayoutInflater.from(mContext);
+		
 	}
 
 	@Override
@@ -103,32 +107,32 @@ public class WorkAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();// 获得暂存的引用
 		}
-		Work tempWrok= workList.get(position);
+		Work tempWrok = workList.get(position);
 		// 设置数据
 		holder.desTextView.setText(tempWrok.getDescription());
-		holder.numLikeTextView.setText(tempWrok.getNumLikes()+"");
-		holder.numReviewTextView.setText(tempWrok.getNumReviews()+"");
-		//标签
+		holder.numLikeTextView.setText(tempWrok.getNumLikes() + "");
+		holder.numReviewTextView.setText(tempWrok.getNumReviews() + "");
+		// 标签
 		String tag = "";
 		for (String temptag : tempWrok.getLabels()) {
 			tag = tag + temptag + " ";
 		}
 		holder.tagTxtView.setText(tag);
-		//修改图像的大小
+		// 修改图像的大小
 		LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) holder.workImageView
 				.getLayoutParams();
-		String imgwidth = tempWrok.getImgwidth();//图像宽度
-		String imgHeight = tempWrok.getImgheight();//图像高度
+		String imgwidth = tempWrok.getImgwidth();// 图像宽度
+		String imgHeight = tempWrok.getImgheight();// 图像高度
 		float f = Float.parseFloat(imgwidth)
 				/ (Util.getDeviceWidth((Activity) this.mContext) - 2 * this.mContext
 						.getResources().getDimensionPixelSize(
 								R.dimen.general_space));
-		int m = (int) (Float.parseFloat(imgHeight) / f);//图像高度
+		int m = (int) (Float.parseFloat(imgHeight) / f);// 图像高度
 		localLayoutParams.height = m;
 		holder.workImageView.setLayoutParams(localLayoutParams);
-		ImageLoader.getInstance().displayImage(
-				tempWrok.getImageBaseUrl(), holder.workImageView,
-				ImageLoaderUtil.options, animateFirstListener);
+		ImageLoader.getInstance().displayImage(tempWrok.getImageBaseUrl(),
+				holder.workImageView, ImageLoaderUtil.options,
+				animateFirstListener);
 		return convertView;
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
+import com.appointphoto.activity.ListPhotographerFragment.MyHandler;
 import com.appointphoto.activity.util.JsonUtil;
 import com.appointphoto.activity.util.MyListViewUtil;
 import com.appointphoto.activity.util.MyURI;
@@ -24,6 +25,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -44,6 +48,9 @@ public class PhotographerActivityEx extends Activity {
 	private LinearLayout emptyactivities;
 	private View convertView;// 头部图像
 
+	private MyHandler myHandler = new MyHandler();
+	private Runnable mythread;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,6 +60,35 @@ public class PhotographerActivityEx extends Activity {
 		setContentView(R.layout.photographer_main2);
 		// 初始化界面
 		init();
+		firstInitView();
+	}
+
+	private void firstInitView() {
+		if (mythread == null) {
+			mythread = new Runnable() {
+				@Override
+				public void run() {
+					int statusCode[] = new int[1];
+					try {
+						adapter.setWorkList((JsonUtil
+								.jsonToWorklist(new JSONArray(MyURI.uri2Str(
+										MyURI.RefreshWorkURI, MyURI
+												.refreshWorks().toString(),
+										statusCode)))));
+					} catch (Exception e) {
+						Message msg = new Message();
+						msg.what = 404;
+						myHandler.dispatchMessage(msg);
+						e.printStackTrace();
+					}
+					Message msg = new Message();
+					msg.what = 200;
+					myHandler.dispatchMessage(msg);
+
+				}
+			};
+		}
+		new Thread(mythread).run();
 	}
 
 	private void init() {
@@ -100,7 +136,7 @@ public class PhotographerActivityEx extends Activity {
 					@Override
 					public void onItemClick(AdapterView<?> container,
 							View view, int position, long id) {
-
+						PhotographerActivityEx.this.startActivity(new Intent(PhotographerActivityEx.this, ImageBrowActivity.class));
 					}
 
 				});
@@ -120,7 +156,8 @@ public class PhotographerActivityEx extends Activity {
 				.findViewById(R.id.photographer_item_viewpager);
 
 		// 设置Adapter
-		mactivities.setAdapter(new ServicePagerAdapter(PhotographerActivityEx.this));
+		mactivities.setAdapter(new ServicePagerAdapter(
+				PhotographerActivityEx.this));
 		// 设置监听状态变化，用来表达其他美化表示
 		mactivities.setOnPageChangeListener(new OnPageChangeListener() {
 
@@ -144,7 +181,8 @@ public class PhotographerActivityEx extends Activity {
 				.findViewById(R.id.activity_pagecontrol);
 		pagecontrol.setCount(3);
 		// 当有activities时，隐藏空项
-		emptyactivities = (LinearLayout) convertView.findViewById(R.id.item_empty_layout);
+		emptyactivities = (LinearLayout) convertView
+				.findViewById(R.id.item_empty_layout);
 		emptyactivities.setVisibility(View.GONE);
 	}
 
@@ -218,6 +256,28 @@ public class PhotographerActivityEx extends Activity {
 			adapter.notifyDataSetChanged();
 			mPullRefreshListView.onRefreshComplete();
 			super.onPostExecute(result);
+		}
+	}
+
+	// 处理异步回调
+	class MyHandler extends Handler {
+		public MyHandler() {
+		}
+
+		public MyHandler(Looper L) {
+			super(L);
+		}
+
+		// 子类必须重写此方法，接受数据
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			if (msg.what == 200) {
+				adapter.notifyDataSetChanged();
+			} else if (msg.what == 404) {
+				// 获取数据失败
+			}
+
 		}
 	}
 

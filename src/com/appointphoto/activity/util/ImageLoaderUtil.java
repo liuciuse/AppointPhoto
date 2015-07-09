@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,6 +12,8 @@ import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.appointphoto.activity.ImageBrowActivity;
+import com.appointphoto.adapter.PhotoViewPagerAdapter;
 import com.appointphoto.adapter.WorkAdapter;
 import com.appointphoto.adapter.WorkAdapter.ViewHolder;
 import com.appointphoto.nouse.PhotographerActivity;
@@ -37,6 +40,14 @@ public class ImageLoaderUtil {
 		@Override
 		public void onLoadingComplete(String imageUri, View view,
 				Bitmap loadedImage) {
+			if (context instanceof ImageBrowActivity) {
+				ImageBrowActivity ima = (ImageBrowActivity) context;
+				PhotoViewPagerAdapter madapter = (PhotoViewPagerAdapter)ima.getAdapter();
+				ImageView img  = (ImageView) view;
+				img.setImageBitmap(loadedImage);
+				PhotoViewAttacher mAttacher = new PhotoViewAttacher(img);
+				mAttacher.update();
+			}
 			if (loadedImage != null) {
 				ImageView imageView = (ImageView) view;
 				boolean firstDisplay = !displayedImages.contains(imageUri);

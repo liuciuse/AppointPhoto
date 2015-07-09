@@ -76,7 +76,8 @@ public class ListPhotographerFragment extends Fragment {
 	Button title_bar_item7;
 	Button title_bar_item8;
 
-	private MyHandler myHandler = new MyHandler();;
+	private MyHandler myHandler = new MyHandler();
+	private Runnable mythread;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,9 +86,40 @@ public class ListPhotographerFragment extends Fragment {
 		parentView = inflater.inflate(R.layout.homelistview, container, false);
 		adapter = new PhotographerAdapter(getActivity());
 		setUpViews();
+		firstInitView(parentView);
 		return parentView;
 	}
 
+
+	//首次打开界面，刷新界面
+	private void firstInitView(View parentView2) {
+		if (mythread == null) {
+			mythread = new Runnable() {
+				@Override
+				public void run() {
+					int statusCode[] = new int[1];
+					try {
+						adapter.setPhotographers(JsonUtil
+								.jsonToPhotographerList(new JSONArray(MyURI.uri2Str(
+										MyURI.RefreshPsURI, MyURI.refreshPts()
+										.toString(), statusCode))));
+					} catch (Exception e) {
+						Message msg = new Message();
+						msg.what = 404;
+						myHandler.dispatchMessage(msg );
+						e.printStackTrace();
+					}
+					Message msg = new Message();
+					msg.what = 200;
+					myHandler.dispatchMessage(msg );
+					
+				}
+			};
+		}
+		new Thread(mythread).run();
+	}
+
+	//初始化界面
 	private void setUpViews() {
 		context = (MainActivity) getActivity();
 		MainActivity parentActivity = (MainActivity) context;
@@ -326,9 +358,8 @@ public class ListPhotographerFragment extends Fragment {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			if (msg.what == 1) {
-				Bundle b = msg.getData();
-				String reslut = b.getString("result");
+			if (msg.what == 200) {
+				adapter.notifyDataSetChanged();
 			} else if (msg.what == 404) {
 				// 获取数据失败
 			}

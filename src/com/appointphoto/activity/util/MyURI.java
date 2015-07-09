@@ -19,6 +19,7 @@ public class MyURI {
 	public static final String registerURI = "http://172.16.157.12:8080/AppointPhotoServer/UserUploadImageAction";
 	public static final String RefreshWorkURI = "http://172.16.157.18:8080/mytest/json-works";
 	public static final String getmoreWorkURI = "http://172.16.157.18:8080/mytest/json-works";
+	public static final String testPhotoBroURI = "http://pic5.nipic.com/20091222/3822085_091248554231_2.jpg";
 	
 	//·ÃÎÊURI»ñÈ¡json×Ö·û´®
 	public static String uri2Str(String urlStr,String jsonStr,int []statusCode) throws Exception {

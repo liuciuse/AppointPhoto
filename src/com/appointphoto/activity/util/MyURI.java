@@ -12,7 +12,7 @@ import org.json.JSONObject;
 public class MyURI {
 	public static final String loginURI = "http://172.16.157.12:8080/AppointPhotoServer/userLoginAction";
 	public static final String photographersURI = "http://172.16.157.18:8080/mytest/jsontest";
-	public static final String RefreshPsURI = "http://172.16.157.18:8080/mytest/json-photographer";
+	public static final String RefreshPsURI = "http://172.16.112.58:8080/mytest/json-photographer";
 	public static final String getmorePsURI = "http://172.16.157.18:8080/mytest/json-photographer";
 	public static final String testPtURI = "http://pic5.nipic.com/20091222/3822085_091248554231_2.jpg";
 	public static final String testavaterURI = "http://img4q.duitang.com/uploads/item/201405/30/20140530154218_TszCx.thumb.700_0.jpeg";

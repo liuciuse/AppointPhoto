@@ -10,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MyPagerAdapter extends PagerAdapter {
+public class ServicePagerAdapter extends PagerAdapter {
 
 	private ArrayList views = new ArrayList<View>();
 	private Context context;
 	private LayoutInflater inflater;
 
-	public MyPagerAdapter(Context context) {
+	public ServicePagerAdapter(Context context) {
 		this.context = context;
 		inflater = LayoutInflater.from(context);
 		// 初始化viewpager所用views

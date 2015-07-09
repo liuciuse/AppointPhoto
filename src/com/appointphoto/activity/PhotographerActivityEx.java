@@ -8,7 +8,7 @@ import com.appointphoto.activity.util.JsonUtil;
 import com.appointphoto.activity.util.MyListViewUtil;
 import com.appointphoto.activity.util.MyURI;
 import com.appointphoto.activity.util.Util;
-import com.appointphoto.adapter.MyPagerAdapter;
+import com.appointphoto.adapter.ServicePagerAdapter;
 import com.appointphoto.adapter.PhotographerAdapter;
 import com.appointphoto.adapter.WorkAdapter;
 import com.appointphoto.service.MyService;
@@ -120,7 +120,7 @@ public class PhotographerActivityEx extends Activity {
 				.findViewById(R.id.photographer_item_viewpager);
 
 		// 设置Adapter
-		mactivities.setAdapter(new MyPagerAdapter(PhotographerActivityEx.this));
+		mactivities.setAdapter(new ServicePagerAdapter(PhotographerActivityEx.this));
 		// 设置监听状态变化，用来表达其他美化表示
 		mactivities.setOnPageChangeListener(new OnPageChangeListener() {
 

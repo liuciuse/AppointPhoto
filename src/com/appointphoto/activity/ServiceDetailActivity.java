@@ -2,6 +2,7 @@ package com.appointphoto.activity;
 
 import java.util.ArrayList;
 
+import com.appointphoto.adapter.ServiceImgAdapter;
 import com.appointphoto.service.MyService;
 import com.appointphoto.widget.PageControl;
 import com.example.appointphoto.R;
@@ -50,20 +51,12 @@ public class ServiceDetailActivity extends Activity {
 		// 初始化中间的活动项
 		activity_viewpager = (ViewPager) findViewById(R.id.activity_viewpager);
 
-		// 初始化viewpager所用views
-		views = new ArrayList();
-		for (int i = 0; i < 3; i++) {
-			View tempView = inflater.inflate(R.layout.list_activity_item,
-					activity_viewpager, false);
-			views.add(tempView);
-			// 点击进入服务
-		}
+		// 设置Adapter
+		activity_viewpager.setAdapter(new ServiceImgAdapter(this));
 		// 初始化pagecontrol
 		pagecontrol = (PageControl) findViewById(R.id.activity_pagecontrol);
 		pagecontrol.setCount(3);
 
-		// 设置Adapter
-		activity_viewpager.setAdapter(new MyPagerAdapter());
 		// 设置监听状态变化，用来表达其他美化表示
 		activity_viewpager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
@@ -81,25 +74,5 @@ public class ServiceDetailActivity extends Activity {
 		});
 	}
 	
-	// 设置中间部分滑动内容 数据源
-		private class MyPagerAdapter extends PagerAdapter {
-			@Override
-			public int getCount() {
-				return views.size();
-			}
-			@Override
-			public boolean isViewFromObject(View arg0, Object arg1) {
-				return arg0 == arg1;
-			}
-			@Override
-			public void destroyItem(ViewGroup container, int position, Object object) {
-				container.removeView((View) views.get(position));
-			}
-			@Override
-			public Object instantiateItem(ViewGroup container, int position) {
-				container.addView((View) views.get(position));
-				return views.get(position);
-			}
-		}
 
 }

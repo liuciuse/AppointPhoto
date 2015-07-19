@@ -28,7 +28,7 @@ public class SettingActivity extends Activity {
 		navibackbtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				SettingActivity.this.finish();
+				MyService.finishActivity(SettingActivity.this);
 			}
 		});
 

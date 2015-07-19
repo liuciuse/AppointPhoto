@@ -61,7 +61,7 @@ public class WelcomeActivity extends Activity {
 	protected void startMain() {
 		Intent mIntent = new Intent(WelcomeActivity.this, MainActivity.class);
 		startActivity(mIntent);
-		WelcomeActivity.this.finish();
+		MyService.finishActivity(WelcomeActivity.this);
 	}
 
 	@Override

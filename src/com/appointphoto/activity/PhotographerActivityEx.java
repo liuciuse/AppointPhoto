@@ -43,13 +43,19 @@ import android.widget.ListView;
 public class PhotographerActivityEx extends Activity {
 	private PullToRefreshListView mPullRefreshListView;// 可刷新listview
 	private WorkAdapter adapter;
+	private ServicePagerAdapter serviceadapter;
 	private LayoutInflater inflater;
 	private PageControl pagecontrol;
+	public PageControl getPagecontrol() {
+		return pagecontrol;
+	}
+
 	private LinearLayout emptyactivities;
 	private View convertView;// 头部图像
 
 	private MyHandler myHandler = new MyHandler();
 	private Runnable mythread;
+	private ViewPager mactivities;//服务页面
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +89,7 @@ public class PhotographerActivityEx extends Activity {
 					}
 					Message msg = new Message();
 					msg.what = 200;
-					myHandler.dispatchMessage(msg);
+					myHandler.sendMessage(msg);
 
 				}
 			};
@@ -136,7 +142,9 @@ public class PhotographerActivityEx extends Activity {
 					@Override
 					public void onItemClick(AdapterView<?> container,
 							View view, int position, long id) {
-						PhotographerActivityEx.this.startActivity(new Intent(PhotographerActivityEx.this, ImageBrowActivity.class));
+						PhotographerActivityEx.this.startActivity(new Intent(
+								PhotographerActivityEx.this,
+								ImageBrowActivity.class));
 					}
 
 				});
@@ -151,13 +159,15 @@ public class PhotographerActivityEx extends Activity {
 
 	// 初始化头部
 	private void initheadview(View convertView) {
-		// 初始化中间的活动项
-		ViewPager mactivities = (ViewPager) convertView
+		mactivities = (ViewPager) convertView
 				.findViewById(R.id.photographer_item_viewpager);
 
-		// 设置Adapter
-		mactivities.setAdapter(new ServicePagerAdapter(
-				PhotographerActivityEx.this));
+		serviceadapter = new ServicePagerAdapter(PhotographerActivityEx.this);
+		mactivities.setAdapter(serviceadapter);
+		// mactivities.setAdapter(new ServicePagerAdapter(
+		// PhotographerActivityEx.this));
+//		mactivities.setAdapter(serviceadapter);
+		new Thread(new MypageGet()).start();
 		// 设置监听状态变化，用来表达其他美化表示
 		mactivities.setOnPageChangeListener(new OnPageChangeListener() {
 
@@ -179,7 +189,7 @@ public class PhotographerActivityEx extends Activity {
 
 		pagecontrol = (PageControl) convertView
 				.findViewById(R.id.activity_pagecontrol);
-		pagecontrol.setCount(3);
+//		pagecontrol.setCount(3);
 		// 当有activities时，隐藏空项
 		emptyactivities = (LinearLayout) convertView
 				.findViewById(R.id.item_empty_layout);
@@ -273,12 +283,39 @@ public class PhotographerActivityEx extends Activity {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			if (msg.what == 200) {
+				//初始化刷新界面
 				adapter.notifyDataSetChanged();
 			} else if (msg.what == 404) {
 				// 获取数据失败
+			} else if (msg.what == 201) {
+				//初始化服务界面
+				serviceadapter.initViews();
+				serviceadapter.notifyDataSetChanged();
 			}
 
 		}
 	}
 
+	// 获取viewpager数据
+	class MypageGet implements Runnable {
+
+		@Override
+		public void run() {
+			int statusCode[] = new int[1];
+			try {
+				serviceadapter.setServices(((JsonUtil.jsonToServiceList(new JSONArray(
+						MyURI.uri2Str(MyURI.testServiceURI, MyURI
+								.getServices().toString(), statusCode))))));
+			} catch (Exception e) {
+				Message msg = new Message();
+				msg.what = 404;
+				myHandler.dispatchMessage(msg);
+				e.printStackTrace();
+			}
+			Message msg = new Message();
+			msg.what = 201;
+			myHandler.sendMessage(msg);
+		}
+
+	}
 }

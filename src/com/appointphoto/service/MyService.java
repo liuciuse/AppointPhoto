@@ -88,6 +88,12 @@ public class MyService extends Service implements Runnable {
 		localActivity.finish();
 	}
 
+	// 杀死activity
+	public static void finishActivity(Activity activ){
+		allActivity.remove(activ);
+		activ.finish();
+	}
+	
 	// 通过名字获取acitivity
 	public static Activity getActivityByName(String paramString) {
 		Iterator localIterator = allActivity.iterator();
@@ -99,6 +105,7 @@ public class MyService extends Service implements Runnable {
 		} while (localActivity.getClass().getName().indexOf(paramString) < 0);
 		return localActivity;
 	}
+	
 
 	// 循环执行任务
 	public void run() {

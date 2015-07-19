@@ -30,6 +30,8 @@ public class User implements Serializable {
 	protected String state;// 用户状态
 	protected String updatedAt;
 	protected String userType;// 用户类型
+	protected String name;//用户名
+	protected String password;//密码
 
 	public User() {
 	}
@@ -52,6 +54,7 @@ public class User implements Serializable {
 		this.state = paramJSONObject.optString("state", "");
 		this.score = paramJSONObject.optInt("credit", 0);
 		this.inviteCode = paramJSONObject.optString("invite_code", "");
+		this.name = paramJSONObject.optString("name","小明");
 		/*
 		 * JSONArray localJSONArray = paramJSONObject.optJSONArray("oauths"); if
 		 * (localJSONArray == null) continue; for (int i = 0; i <

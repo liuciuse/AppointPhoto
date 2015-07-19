@@ -380,4 +380,6 @@
     <item type="id" name="item_taken_positions_negative" />
     <item type="id" name="item_taken_positions_finishingPiece" />
     
+    <item type="id" name="item_uploadwork_btn" />
+    
 </resources>

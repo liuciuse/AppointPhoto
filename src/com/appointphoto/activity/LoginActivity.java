@@ -37,7 +37,7 @@ public class LoginActivity extends Activity {
 		left_btn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LoginActivity.this.finish();
+				MyService.finishActivity(LoginActivity.this);
 			}
 		});
 		login_normol_btn = (Button) findViewById(R.id.login_normol_btn);

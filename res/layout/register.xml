@@ -12,10 +12,12 @@
                 <ImageView android:layout_gravity="right" android:layout_width="@dimen/arrow_layout_width" android:layout_height="fill_parent" android:layout_marginRight="@dimen/general_space" android:src="@drawable/item_arrow" />
             </FrameLayout>
             <TextView android:layout_gravity="bottom" android:background="@color/upload_work_edittext_color" android:layout_width="fill_parent" android:layout_height="@dimen/line_height" />
+           	<!-- 
             <FrameLayout android:id="@id/loaction_layout" android:background="@color/white" android:layout_width="fill_parent" android:layout_height="wrap_content">
                 <Button android:textSize="@dimen/add_review_edittext_textsize" android:textColor="@color/home_user_name_color" android:gravity="center_vertical" android:id="@id/loaction_btn" android:background="@null" android:paddingLeft="@dimen/general_space" android:layout_width="fill_parent" android:layout_height="@dimen/menu_item_child_height" android:text="所在地" />
                 <ImageView android:layout_gravity="right" android:layout_width="@dimen/arrow_layout_width" android:layout_height="fill_parent" android:layout_marginRight="@dimen/general_space" android:src="@drawable/item_arrow" />
             </FrameLayout>
+             -->
             <TextView android:layout_gravity="bottom" android:background="@color/upload_work_edittext_color" android:layout_width="fill_parent" android:layout_height="@dimen/line_height" />
             <EditText android:textSize="@dimen/add_review_edittext_textsize" android:textColor="@color/home_user_name_color" android:textColorHint="@color/upload_work_edittext_color" android:id="@id/contact_editText" android:background="@color/white" android:paddingLeft="@dimen/general_space" android:layout_width="fill_parent" android:layout_height="@dimen/menu_item_child_height" android:hint="联系电话" android:maxLength="11" android:inputType="number" />
             <TextView android:layout_gravity="bottom" android:background="@color/upload_work_edittext_color" android:layout_width="fill_parent" android:layout_height="@dimen/line_height" />

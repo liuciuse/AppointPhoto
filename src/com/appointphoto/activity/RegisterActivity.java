@@ -16,6 +16,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,6 +61,7 @@ public class RegisterActivity extends Activity {
 	private Bitmap workBitmap3;
 	PopupWindow popupWindow;
 	ProgressDialog mypDialog;
+	Handler mHandler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,7 @@ public class RegisterActivity extends Activity {
 		setContentView(R.layout.register);
 		inflater = LayoutInflater.from(this);
 		initItems();
+		mHandler = new MyHandler();
 	}
 
 	private void initItems() {
@@ -116,7 +121,7 @@ public class RegisterActivity extends Activity {
 		initDialog();
 	}
 
-	//注册对话框
+	// 注册对话框
 	private void initDialog() {
 		mypDialog = new ProgressDialog(this);
 		// 设置进度条风格，风格为圆形，旋转的
@@ -169,7 +174,7 @@ public class RegisterActivity extends Activity {
 		// Util.showShortToast(this, "当前网络不能用！");
 		// return;
 		// }
-		//注册
+		// 注册
 		new RegisterRequest().execute();
 		mypDialog.show();
 	}
@@ -237,47 +242,50 @@ public class RegisterActivity extends Activity {
 			break;
 		case 11:// 获取所拍摄过作品
 			if (resultCode == RESULT_OK) {
-				Uri uri = data.getData();
-				Log.e("uri", uri.toString());
-				ContentResolver cr = this.getContentResolver();
-				try {
-					Bitmap bitmap = BitmapFactory.decodeStream(cr
-							.openInputStream(uri));
-					workBitmap1 = bitmap;
-					workImageV1.setImageBitmap(bitmap);
-				} catch (FileNotFoundException e) {
-					Log.e("Exception", e.getMessage(), e);
-				}
+				// Uri uri = data.getData();
+				// Log.e("uri", uri.toString());
+				// ContentResolver cr = this.getContentResolver();
+				// try {
+				// Bitmap bitmap = BitmapFactory.decodeStream(cr
+				// .openInputStream(uri));
+				// workBitmap1 = bitmap;
+				// workImageV1.setImageBitmap(bitmap);
+				// } catch (FileNotFoundException e) {
+				// Log.e("Exception", e.getMessage(), e);
+				// }
+				new Thread(new LoadPic(data, 2001)).start();
 			}
 			break;
 		case 12:// 获取所拍摄过作品
 			if (resultCode == RESULT_OK) {
-				Uri uri = data.getData();
-				Log.e("uri", uri.toString());
-				ContentResolver cr = this.getContentResolver();
-				try {
-					Bitmap bitmap = BitmapFactory.decodeStream(cr
-							.openInputStream(uri));
-					workBitmap2 = bitmap;
-					workImageV2.setImageBitmap(bitmap);
-				} catch (FileNotFoundException e) {
-					Log.e("Exception", e.getMessage(), e);
-				}
+				// Uri uri = data.getData();
+				// Log.e("uri", uri.toString());
+				// ContentResolver cr = this.getContentResolver();
+				// try {
+				// Bitmap bitmap = BitmapFactory.decodeStream(cr
+				// .openInputStream(uri));
+				// workBitmap2 = bitmap;
+				// workImageV2.setImageBitmap(bitmap);
+				// } catch (FileNotFoundException e) {
+				// Log.e("Exception", e.getMessage(), e);
+				// }
 			}
+			new Thread(new LoadPic(data, 2002)).start();
 			break;
 		case 13:// 获取所拍摄过作品
 			if (resultCode == RESULT_OK) {
-				Uri uri = data.getData();
-				Log.e("uri", uri.toString());
-				ContentResolver cr = this.getContentResolver();
-				try {
-					Bitmap bitmap = BitmapFactory.decodeStream(cr
-							.openInputStream(uri));
-					workBitmap3 = bitmap;
-					workImageV3.setImageBitmap(bitmap);
-				} catch (FileNotFoundException e) {
-					Log.e("Exception", e.getMessage(), e);
-				}
+				// Uri uri = data.getData();
+				// Log.e("uri", uri.toString());
+				// ContentResolver cr = this.getContentResolver();
+				// try {
+				// Bitmap bitmap = BitmapFactory.decodeStream(cr
+				// .openInputStream(uri));
+				// workBitmap3 = bitmap;
+				// workImageV3.setImageBitmap(bitmap);
+				// } catch (FileNotFoundException e) {
+				// Log.e("Exception", e.getMessage(), e);
+				// }
+				new Thread(new LoadPic(data, 2003)).start();
 			}
 			break;
 
@@ -317,8 +325,8 @@ public class RegisterActivity extends Activity {
 		}
 
 	}
-	
-	//注册请求
+
+	// 注册请求
 	@SuppressLint("NewApi")
 	private class RegisterRequest extends AsyncTask<Void, Void, Void> {
 		@Override
@@ -370,6 +378,76 @@ public class RegisterActivity extends Activity {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			mypDialog.cancel();
+		}
+	}
+
+	// 设置图片时，有点慢
+	class LoadPic implements Runnable {
+		Intent data;
+		int what;
+
+		public LoadPic(Intent data, int what) {
+			this.data = data;
+			this.what = what;
+		}
+
+		@Override
+		public void run() {
+			Uri uri = data.getData();
+			Log.e("uri", uri.toString());
+			ContentResolver cr = RegisterActivity.this.getContentResolver();
+			Bitmap bitmap = null;
+			try {
+				bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+				Message message = new Message();
+				Bundle data = new Bundle();
+				data.putParcelable("workBitmap", bitmap);
+				message.setData(data);
+				message.what = this.what;// 图片
+				mHandler.sendMessage(message);
+
+			} catch (FileNotFoundException e) {
+				Log.e("Exception", e.getMessage(), e);
+			}
+
+		}
+
+	}
+
+	// 主线程处理
+	class MyHandler extends Handler {
+		public MyHandler() {
+		}
+
+		public MyHandler(Looper L) {
+			super(L);
+		}
+
+		// 子类必须重写此方法，接受数据
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			Bundle data = msg.getData();
+			Bitmap bitmap = data.getParcelable("workBitmap");
+			switch (msg.what) {
+			case 1111:
+				
+				break;
+			case 2001:
+				workBitmap1 = bitmap;
+				workImageV1.setImageBitmap(bitmap);
+				break;
+			case 2002:
+				workImageV2.setImageBitmap(bitmap);
+				break;
+			case 2003:
+				workImageV3.setImageBitmap(bitmap);
+				break;
+
+			default:
+				break;
+			}
+
 		}
 	}
 

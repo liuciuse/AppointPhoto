@@ -44,4 +44,6 @@
     <string name="umeng_fb_notification_content_formatter_multiple_msg">You received %d new replies from the app developer.</string>
     
     <string name="action_settings">设置</string>
+    
+    
 </resources>

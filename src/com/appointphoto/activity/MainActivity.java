@@ -1,8 +1,13 @@
 package com.appointphoto.activity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,12 +38,16 @@ public class MainActivity extends FragmentActivity implements
 	private ResideMenuItem itemMine;
 	private ResideMenuItem itemSetting;
 	private ResideMenuItem itemQuit;
-	private ResideMenuItem itemRegAsPhotographer;
-	private ResideMenuItem itemRegAsModel;
-	private ResideMenuItem itemRegAsdresser;
+//	private ResideMenuItem itemRegAsPhotographer;
+//	private ResideMenuItem itemRegAsModel;
+//	private ResideMenuItem itemRegAsdresser;
 	private TextView headerName;
 
-	
+	SharedPreferences user;// 用户
+	JSONObject userJson;// 保存用户信息
+	boolean islogin = false;// 是否登录
+	private ResideMenuItem itemRegAsOther;
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -71,8 +80,33 @@ public class MainActivity extends FragmentActivity implements
 		mContext = this;
 		initItems();
 		setUpMenu();
+		initUser();
+
 		if (savedInstanceState == null)
 			changeFragment(new ListPhotographerFragment());
+	}
+
+	// 再次打开界面
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if (islogin) {
+			itemQuit.setVisibility(View.VISIBLE);
+		}
+	}
+
+	// 初始化用户信息
+	private void initUser() {
+		user = getSharedPreferences("user", Context.MODE_PRIVATE);
+		try {
+			userJson = new JSONObject(user.getString("user", ""));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		String loginstate = userJson.optString("loginstate");
+		if (loginstate.equals("logined")) {
+			islogin = true;
+		}
 	}
 
 	private void initItems() {
@@ -99,30 +133,36 @@ public class MainActivity extends FragmentActivity implements
 				"我的");
 		itemSetting = new ResideMenuItem(this, R.drawable.menu_icon_setting,
 				"设置");
-		itemRegAsPhotographer = new ResideMenuItem(this,
-				R.drawable.menu_icon_invite, "申请为认证摄影师");
-		itemRegAsdresser = new ResideMenuItem(this,
-				R.drawable.menu_icon_invite, "申请为认证化妆师");
-		itemRegAsModel = new ResideMenuItem(this, R.drawable.menu_icon_invite,
-				"申请为认证模特");
+//		itemRegAsPhotographer = new ResideMenuItem(this,
+//				R.drawable.menu_icon_invite, "申请为认证摄影师");
+//		itemRegAsdresser = new ResideMenuItem(this,
+//				R.drawable.menu_icon_invite, "申请为认证化妆师");
+//		itemRegAsModel = new ResideMenuItem(this, R.drawable.menu_icon_invite,
+//				"申请为认证模特");
+		itemRegAsOther = new ResideMenuItem(this,
+				R.drawable.menu_icon_invite, "申请为认证角色");
 		itemQuit = new ResideMenuItem(this, R.drawable.menu_icon_quit, "退出登录");
+		itemQuit.setVisibility(View.GONE);
 
 		itemHome.setOnClickListener(this);
 		itemMine.setOnClickListener(this);
 		itemSetting.setOnClickListener(this);
 		itemQuit.setOnClickListener(this);
-		itemRegAsPhotographer.setOnClickListener(this);
-		itemRegAsModel.setOnClickListener(this);
-		itemRegAsdresser.setOnClickListener(this);
+//		itemRegAsPhotographer.setOnClickListener(this);
+//		itemRegAsModel.setOnClickListener(this);
+//		itemRegAsdresser.setOnClickListener(this);
+		itemRegAsOther.setOnClickListener(this);
 
 		resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemMine, ResideMenu.DIRECTION_LEFT);
-		resideMenu
-				.addMenuItem(itemRegAsPhotographer, ResideMenu.DIRECTION_LEFT);
-		resideMenu.addMenuItem(itemRegAsdresser, ResideMenu.DIRECTION_LEFT);
-		resideMenu.addMenuItem(itemRegAsModel, ResideMenu.DIRECTION_LEFT);
+//		resideMenu
+//				.addMenuItem(itemRegAsPhotographer, ResideMenu.DIRECTION_LEFT);
+//		resideMenu.addMenuItem(itemRegAsdresser, ResideMenu.DIRECTION_LEFT);
+//		resideMenu.addMenuItem(itemRegAsModel, ResideMenu.DIRECTION_LEFT);
+		resideMenu.addMenuItem(itemRegAsOther, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemSetting, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemQuit, ResideMenu.DIRECTION_LEFT);
+		
 
 		findViewById(R.id.title_bar_left_menu).setOnClickListener(
 				new View.OnClickListener() {
@@ -131,8 +171,9 @@ public class MainActivity extends FragmentActivity implements
 						resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
 					}
 				});
-		//设置头像
-		ImageView avarimg = (ImageView) resideMenu.findViewById(R.id.user_avatar_image_view);
+		// 设置头像
+		ImageView avarimg = (ImageView) resideMenu
+				.findViewById(R.id.user_avatar_image_view);
 		avarimg.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -159,14 +200,11 @@ public class MainActivity extends FragmentActivity implements
 			headerName.setText("我的");
 		} else if (view == itemSetting) {
 			startActivity(new Intent(this, SettingActivity.class));
+		} else if(view == itemRegAsOther){
+			resideMenu.closeMenu();
+			startActivity(new Intent(this, ChangeRoleActivity.class));
 		} else if (view == itemQuit) {
 			exit();
-		} else if (view == itemRegAsPhotographer) {
-			startActivity(new Intent(this, LoginActivity.class));
-		} else if (view == itemRegAsdresser) {
-			Util.showDlg(this, "dress", "你真的确定");
-		} else if (view == itemRegAsModel) {
-
 		}
 
 		resideMenu.closeMenu();
@@ -183,8 +221,7 @@ public class MainActivity extends FragmentActivity implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {//
-
-								MainActivity.this.finish();
+								clear();
 							}
 						})
 				.setNegativeButton("取消", new DialogInterface.OnClickListener() {// 添加返回按钮
@@ -194,6 +231,12 @@ public class MainActivity extends FragmentActivity implements
 								Log.i("alertdialog", " 请保存数据！");
 							}
 						}).show();// 在按键响应事件中显示此对话框
+	}
+
+	// 退出用户，做清理工作
+	protected void clear() {
+		user.edit().clear();
+		itemQuit.setVisibility(View.GONE);
 	}
 
 	// 监听菜单状态
@@ -219,7 +262,6 @@ public class MainActivity extends FragmentActivity implements
 				.commit();
 	}
 
-	// What good method is to access resideMenu？
 	public ResideMenu getResideMenu() {
 		return resideMenu;
 	}

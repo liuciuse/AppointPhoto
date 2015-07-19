@@ -8,16 +8,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appointphoto.activity.util.MyURI;
+
 //提供的服务
 public class XItem implements Serializable {
 	private String albumInfo;
 	private String category;
 	private String costumeInfo;
 	private String createdAt;
-	private int daysPerOrder;
+	private int daysPerOrder;//预定天数
 	private String description;
 	private String frameInfo;
-	private String imageUrl;
+	private String imageUrl;//图片地址
 	private int isGivingOriginals;
 	private int isProvidingAlbum;
 	private int isProvidingCostume;
@@ -32,14 +34,14 @@ public class XItem implements Serializable {
 	private int numSold;
 	private int numTakenPhotos;
 	private int numTakenPositons;
-	private int price;
+	private int price;//价格
 	private String priceUnit;
 	private String serviceId;
 	private String serviceOn;
 	private String serviceTime;
 	private String serviceTo;
-	private List<String> styles;
-	private String title;
+	private List<String> styles;//风格
+	private String title;//标题
 	private String updatedAt;
 	private Photographer user;
 
@@ -48,13 +50,13 @@ public class XItem implements Serializable {
 			return;
 		this.serviceId = paramJSONObject.optString("id", "");
 		this.category = paramJSONObject.optString("category", "");
-		this.price = paramJSONObject.optInt("price", 0);
+		this.price = paramJSONObject.optInt("price", 100);
 		this.priceUnit = paramJSONObject.optString("price_unit", "");
 		this.description = paramJSONObject.optString("description", "");
 		this.createdAt = paramJSONObject.optString("created_at", "");
 		this.updatedAt = paramJSONObject.optString("updated_at", "");
-		this.title = paramJSONObject.optString("title", "");
-		this.imageUrl = paramJSONObject.optString("image_base_url", "");
+		this.title = paramJSONObject.optString("title", "我是小苹果");
+		this.imageUrl = paramJSONObject.optString("image_base_url", MyURI.testavaterURI);
 		this.location = paramJSONObject.optString("location", "");
 		if (paramJSONObject.optJSONObject("user") != null)
 			this.user = new Photographer(paramJSONObject.optJSONObject("user"));

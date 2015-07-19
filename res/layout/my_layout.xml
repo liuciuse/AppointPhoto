@@ -28,5 +28,10 @@
         <Button android:textSize="@dimen/item_service_des_textsize" android:textColor="@color/home_user_name_color" android:gravity="left|center" android:id="@id/item_msg_btn" android:background="@null" android:paddingLeft="@dimen/general_space" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="私信和通知" android:layout_toRightOf="@id/item_icon" />
         <TextView android:textSize="@dimen/photographer_real_name_textsize" android:textColor="@color/nav_btn_textcolor" android:gravity="center_vertical" android:id="@id/item_msg_title" android:layout_width="wrap_content" android:layout_height="@dimen/menu_item_child_height" android:layout_marginLeft="@dimen/item_right_text_view_width" android:text="(15)" />
     </RelativeLayout>
+    <RelativeLayout android:background="@color/white" android:layout_width="fill_parent" android:layout_height="@dimen/menu_item_child_height">
+        <ImageView android:id="@id/item_tag_arrow" android:layout_width="@dimen/arrow_layout_width" android:layout_height="fill_parent" android:layout_marginRight="@dimen/general_space" android:src="@drawable/item_arrow" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+        <ImageView android:id="@id/item_icon" android:layout_width="@dimen/my_menu_icon_shape" android:layout_height="@dimen/my_menu_icon_shape" android:layout_marginLeft="@dimen/general_space" android:src="@drawable/mine_icon_new" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+        <Button android:textSize="@dimen/item_service_des_textsize" android:textColor="@color/home_user_name_color" android:gravity="left|center" android:id="@id/item_uploadwork_btn" android:background="@null" android:paddingLeft="@dimen/general_space" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="上传个人作品" android:layout_toRightOf="@id/item_icon" />
+    </RelativeLayout>
     <TextView android:layout_gravity="bottom" android:background="@color/upload_work_edittext_color" android:layout_width="fill_parent" android:layout_height="@dimen/line_height" />
 </LinearLayout>

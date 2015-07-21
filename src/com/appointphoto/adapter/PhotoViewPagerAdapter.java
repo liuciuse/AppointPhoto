@@ -2,28 +2,29 @@ package com.appointphoto.adapter;
 
 import java.util.ArrayList;
 
-import com.appointphoto.activity.util.ImageLoaderUtil;
-import com.appointphoto.activity.util.MyURI;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-
 import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
+
+import com.appointphoto.activity.util.ImageLoaderUtil;
+import com.appointphoto.activity.util.MyURI;
+import com.appointphoto.model.Work;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 public class PhotoViewPagerAdapter extends PagerAdapter {
 
-	ArrayList<ImageView> views = new ArrayList<ImageView>();
+	// 当前进入摄影师空间，摄影师作品
+	private MyWorkList myworklist;
 	Context context;
 	private ImageLoadingListener animateFirstListener;
 
-	public PhotoViewPagerAdapter(Context context) {
+	public PhotoViewPagerAdapter(Context context,MyWorkList myworklist) {
+		this.myworklist = myworklist;
 		this.context = context;
 		animateFirstListener = new ImageLoaderUtil.AnimateFirstDisplayListener(
 				context);
@@ -31,7 +32,7 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
 
 	@Override
 	public int getCount() {
-		return 2;
+		return myworklist.getWorkList().size();
 	}
 
 	@Override
@@ -41,12 +42,12 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
 		// Now just add PhotoView to ViewPager and return it
 		container.addView(photoView, LayoutParams.MATCH_PARENT,
 				LayoutParams.MATCH_PARENT);
-		
-		ImageLoader.getInstance().displayImage(MyURI.testPhotoBroURI,
+
+		Work tempWork = myworklist.getWorkList().get(position);
+		ImageLoader.getInstance().displayImage(tempWork.getImageBaseUrl(),
 				photoView, ImageLoaderUtil.options, animateFirstListener);
 		return photoView;
 	}
-
 
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {

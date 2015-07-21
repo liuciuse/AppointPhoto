@@ -8,6 +8,7 @@ import java.util.List;
 import org.json.JSONArray;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -76,6 +77,8 @@ public class ListPhotographerFragment extends Fragment {
 	Button title_bar_item7;
 	Button title_bar_item8;
 
+	ProgressDialog mypDialog;
+
 	private MyHandler myHandler = new MyHandler();
 	private Runnable mythread;
 
@@ -90,8 +93,21 @@ public class ListPhotographerFragment extends Fragment {
 		return parentView;
 	}
 
+	// 注册对话框
+	private void initDialog() {
+		mypDialog = new ProgressDialog(getActivity());
+		// 设置进度条风格，风格为圆形，旋转的
+		mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		// 设置ProgressDialog 标题
+		mypDialog.setTitle("载入");
+		mypDialog.setMessage("正在载入...");
+		// 设置ProgressDialog 的进度条是否不明确
+		mypDialog.setIndeterminate(false);
+		// 设置ProgressDialog 是否可以按退回按键取消
+		mypDialog.setCancelable(false);
+	}
 
-	//首次打开界面，刷新界面
+	// 首次打开界面，刷新界面
 	private void firstInitView(View parentView2) {
 		if (mythread == null) {
 			mythread = new Runnable() {
@@ -100,27 +116,30 @@ public class ListPhotographerFragment extends Fragment {
 					int statusCode[] = new int[1];
 					try {
 						adapter.setPhotographers(JsonUtil
-								.jsonToPhotographerList(new JSONArray(MyURI.uri2Str(
-										MyURI.RefreshPsURI, MyURI.refreshPts()
-										.toString(), statusCode))));
+								.jsonToPhotographerList(new JSONArray(MyURI
+										.uri2Str(MyURI.RefreshPsURI, MyURI
+												.refreshPts().toString(),
+												statusCode))));
 					} catch (Exception e) {
 						Message msg = new Message();
 						msg.what = 404;
-						myHandler.dispatchMessage(msg );
+						myHandler.sendMessage(msg);
 						e.printStackTrace();
 					}
 					Message msg = new Message();
 					msg.what = 200;
-					myHandler.dispatchMessage(msg );
-					
+					myHandler.sendMessage(msg);
+
 				}
 			};
 		}
 		new Thread(mythread).run();
+		mypDialog.show();
 	}
 
-	//初始化界面
+	// 初始化界面
 	private void setUpViews() {
+		initDialog();//初始化对话框
 		context = (MainActivity) getActivity();
 		MainActivity parentActivity = (MainActivity) context;
 		resideMenu = parentActivity.getResideMenu();
@@ -175,6 +194,9 @@ public class ListPhotographerFragment extends Fragment {
 						// 设置点击摄影师后，打开摄影师主界面
 						Intent mIntent = new Intent(context,
 								PhotographerActivityEx.class);
+						Photographer pgTemp = adapter.getPhotographers().get(
+								position - 1);
+						mIntent.putExtra("photographer", pgTemp);
 						startActivity(mIntent);
 
 					}
@@ -275,7 +297,7 @@ public class ListPhotographerFragment extends Fragment {
 				Util.showShortToast(context, "汗,服务器失联了");
 			}
 			mPullRefreshListView.onRefreshComplete();
-			
+
 			super.onCancelled(result);
 		}
 
@@ -287,7 +309,6 @@ public class ListPhotographerFragment extends Fragment {
 			super.onPostExecute(result);
 		}
 	}
-
 
 	// 选择类别处理
 	public class MyBtnClickListener implements View.OnClickListener {
@@ -333,15 +354,15 @@ public class ListPhotographerFragment extends Fragment {
 
 	// 选中某一类别，标示
 	private void changeSelcolor(View v) {
-		title_bar_item0.setTextColor(getResources().getColor(R.color.black));
-		title_bar_item1.setTextColor(getResources().getColor(R.color.black));
-		title_bar_item2.setTextColor(getResources().getColor(R.color.black));
-		title_bar_item3.setTextColor(getResources().getColor(R.color.black));
-		title_bar_item4.setTextColor(getResources().getColor(R.color.black));
-		title_bar_item5.setTextColor(getResources().getColor(R.color.black));
-		title_bar_item6.setTextColor(getResources().getColor(R.color.black));
-		title_bar_item7.setTextColor(getResources().getColor(R.color.black));
-		title_bar_item8.setTextColor(getResources().getColor(R.color.black));
+		title_bar_item0.setTextColor(getResources().getColor(R.color.darkgray));
+		title_bar_item1.setTextColor(getResources().getColor(R.color.darkgray));
+		title_bar_item2.setTextColor(getResources().getColor(R.color.darkgray));
+		title_bar_item3.setTextColor(getResources().getColor(R.color.darkgray));
+		title_bar_item4.setTextColor(getResources().getColor(R.color.darkgray));
+		title_bar_item5.setTextColor(getResources().getColor(R.color.darkgray));
+		title_bar_item6.setTextColor(getResources().getColor(R.color.darkgray));
+		title_bar_item7.setTextColor(getResources().getColor(R.color.darkgray));
+		title_bar_item8.setTextColor(getResources().getColor(R.color.darkgray));
 		((Button) v).setTextColor(getResources().getColor(R.color.orange));
 	}
 
@@ -363,10 +384,10 @@ public class ListPhotographerFragment extends Fragment {
 			} else if (msg.what == 404) {
 				// 获取数据失败
 			}
+			
+			mypDialog.cancel();
 
 		}
 	}
-
-	
 
 }

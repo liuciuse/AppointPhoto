@@ -25,6 +25,7 @@ import com.appointphoto.activity.util.JsonUtil;
 import com.appointphoto.activity.util.MyListViewUtil;
 import com.appointphoto.activity.util.MyURI;
 import com.appointphoto.activity.util.Util;
+import com.appointphoto.adapter.MyWorkList;
 import com.appointphoto.adapter.WorkAdapter;
 import com.appointphoto.service.MyService;
 import com.appointphoto.widget.PageControl;
@@ -84,7 +85,7 @@ public class PhotographerActivity extends Activity {
 				});
 
 		// 初始化数据源
-		adapter = new WorkAdapter(this);
+		adapter = new WorkAdapter(this,new MyWorkList());
 		// 初始化列表
 		mListView = (ListView) findViewById(R.id.listview);
 		mListView.setAdapter(adapter);
@@ -149,9 +150,9 @@ public class PhotographerActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 			int statusCode[] = new int[1];
 			try {
-				adapter.setWorkList((JsonUtil.jsonToWorklist(new JSONArray(
-						MyURI.uri2Str(MyURI.RefreshWorkURI, MyURI.refreshWorks()
-								.toString(), statusCode)))));
+//				adapter.setWorkList((JsonUtil.jsonToWorklist(new JSONArray(
+//						MyURI.uri2Str(MyURI.RefreshWorkURI, MyURI.refreshWorks()
+//								.toString(), statusCode)))));
 			} catch (Exception e) {
 				this.cancel(true);
 				e.printStackTrace();
@@ -187,9 +188,9 @@ public class PhotographerActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 			int statusCode[] = new int[1];
 			try {
-				adapter.getWorkList().addAll(((JsonUtil.jsonToWorklist(new JSONArray(
-						MyURI.uri2Str(MyURI.getmoreWorkURI, MyURI.getmoreWorks()
-								.toString(), statusCode))))));
+//				adapter.getWorkList().addAll(((JsonUtil.jsonToWorklist(new JSONArray(
+//						MyURI.uri2Str(MyURI.getmoreWorkURI, MyURI.getmoreWorks()
+//								.toString(), statusCode))))));
 			} catch (Exception e) {
 				this.cancel(true);
 				e.printStackTrace();

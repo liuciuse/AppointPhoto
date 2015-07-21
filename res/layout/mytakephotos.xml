@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_bg_color"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@id/nav_bar"
+        layout="@layout/navbar" />
+
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:text="每次最多上传不超过6张" />
+        
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@id/upload_work_imageV1"
+                    android:layout_width="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_height="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_marginLeft="@dimen/general_space"
+                    android:layout_marginTop="@dimen/register_photographer_upload_work_margin_top"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/upload_work_btn_image" />
+
+                <ImageView
+                    android:id="@id/upload_work_imageV2"
+                    android:layout_width="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_height="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_marginLeft="@dimen/general_space"
+                    android:layout_marginTop="@dimen/register_photographer_upload_work_margin_top"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/upload_work_btn_image"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@id/upload_work_imageV3"
+                    android:layout_width="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_height="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_marginLeft="@dimen/general_space"
+                    android:layout_marginTop="@dimen/register_photographer_upload_work_margin_top"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/upload_work_btn_image"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/upload_work_imageV4"
+                    android:layout_width="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_height="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_marginLeft="@dimen/general_space"
+                    android:layout_marginTop="@dimen/register_photographer_upload_work_margin_top"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/upload_work_btn_image"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/upload_work_imageV5"
+                    android:layout_width="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_height="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_marginLeft="@dimen/general_space"
+                    android:layout_marginTop="@dimen/register_photographer_upload_work_margin_top"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/upload_work_btn_image"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/upload_work_imageV6"
+                    android:layout_width="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_height="@dimen/register_photographer_upload_work_btn_shape"
+                    android:layout_marginLeft="@dimen/general_space"
+                    android:layout_marginTop="@dimen/register_photographer_upload_work_margin_top"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/upload_work_btn_image"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

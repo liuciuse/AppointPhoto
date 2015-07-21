@@ -69,6 +69,7 @@ public class MyService extends Service implements Runnable {
 			}
 			((Activity) localIterator.next()).finish();
 		}
+		
 	}
 
 	// …±À¿activity

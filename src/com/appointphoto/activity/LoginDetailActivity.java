@@ -26,6 +26,7 @@ import com.appointphoto.activity.util.MD5;
 import com.appointphoto.activity.util.MyURI;
 import com.appointphoto.service.MyService;
 import com.example.appointphoto.R;
+import com.special.ResideMenu.ResideMenu;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -41,14 +42,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class LoginDetailActivity extends Activity {
 	Button login_normol_btn;
-	EditText user_name;//用户名
-	EditText password;//密码
+	EditText user_name;// 用户名
+	EditText password;// 密码
 	private MyHandler myHandler;
 	ProgressDialog mypDialog;
-	public String passEx;//签名后密码
+	public String passEx;// 签名后密码
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,23 +83,28 @@ public class LoginDetailActivity extends Activity {
 	}
 
 	private void inituserwpassword() {
-		SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
-		String usrStr = sharedPreferences.getString("user", "");
+		SharedPreferences sharedPreferences = getSharedPreferences(
+				getResources().getString(R.string.user_pref),
+				Context.MODE_PRIVATE);
+		String usrStr = sharedPreferences.getString(
+				getResources().getString(R.string.user_pref), "");
 		JSONObject user = null;
 		String userName = "";
 		String userPassword = "";
 		try {
 			user = new JSONObject(usrStr);
-			userName = user.optString("name","");
-			userPassword = user.optString("psssword", "");
+			userName = user.optString(
+					getResources().getString(R.string.user_name), "");
+			userPassword = user.optString(
+					getResources().getString(R.string.user_password), "");
 			System.out.println(userPassword);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		user_name.setText(userName);
 		password.setText(userPassword);
-		
+
 	}
 
 	// 注册对话框
@@ -132,25 +139,20 @@ public class LoginDetailActivity extends Activity {
 				Bundle b = msg.getData();
 				String result = b.getString("result");
 				if ("success".equals(result)) {
-					try {
-						passEx = MD5.getMD5(password.getText().toString());
-					} catch (NoSuchAlgorithmException e) {
-						e.printStackTrace();
-					}
-					
-					SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
-					Editor editor =  sharedPreferences.edit();
-					editor.clear();
-					editor.putString("user", getUserJson());//持久化对象user
+
+					SharedPreferences sharedPreferences = getSharedPreferences(
+							"user", Context.MODE_PRIVATE);
+					Editor editor = sharedPreferences.edit();
+					editor.putString("user", getUserJson());// 持久化对象user
 					editor.commit();
-					
-					//返回MainActivity
+
+					// 返回MainActivity
 					backtoMain();
 				}
 			} else if (msg.what == 404) {
 				// 获取数据失败
 			}
-			
+
 			mypDialog.dismiss();
 
 		}
@@ -165,8 +167,12 @@ public class LoginDetailActivity extends Activity {
 			String result = null;
 			int[] statusCode = new int[1];
 			try {
-				jsonObject.put("name", user_name.getText().toString());
-				jsonObject.put("password", password.getText().toString());
+				passEx = MD5.getMD5(password.getText().toString());
+				jsonObject.put(getResources().getString(R.string.user_name),
+						user_name.getText().toString());
+				jsonObject.put(
+						getResources().getString(R.string.user_password),
+						passEx);
 				result = MyURI.uri2Str(urlStr, jsonObject.toString(),
 						statusCode);
 			} catch (JSONException e1) {
@@ -192,23 +198,39 @@ public class LoginDetailActivity extends Activity {
 
 	}
 
-	//登录成功，保存用户信息
+	// 登录成功，保存用户信息
 	public String getUserJson() {
 		JSONObject user = new JSONObject();
 		try {
-			user.put("name", user_name.getText().toString());
-			user.put("psssword", password.getText().toString());
-			user.put("passEx", passEx);
-			user.put("loginstate", "logined");
+			user.put(getResources().getString(R.string.user_name), user_name
+					.getText().toString());
+			user.put(getResources().getString(R.string.user_password), password
+					.getText().toString());
+			user.put(getResources().getString(R.string.user_passwordMD5),
+					passEx);
+			user.put(getResources().getString(R.string.user_loginstate),
+					"logined");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return user.toString();
 	}
 
-	//返回MainActivity
+	// 返回MainActivity
 	public void backtoMain() {
-		MyService.finishActivities(new String[]{"LoginDetailActivity","ChangeRoleActivity","LoginActivity"});
+
+		MainActivity mainact = (MainActivity) MyService
+				.getActivityByName("MainActivity");
+		initMainResideMenu(mainact.getResideMenu());
+		MyService.finishActivities(new String[] { "LoginDetailActivity",
+				"ChangeRoleActivity", "LoginActivity" });
+	}
+
+	// 初始化mainactivity的侧边residemenu
+	private void initMainResideMenu(ResideMenu resideMenu) {
+		TextView user_nickname_text_view = (TextView) resideMenu
+				.findViewById(R.id.user_nickname_text_view);
+		user_nickname_text_view.setText(user_name.getText().toString());
 	}
 
 }

@@ -2,16 +2,6 @@ package com.appointphoto.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
-
-import uk.co.senab.photoview.PhotoViewAttacher;
-
-import com.appointphoto.activity.util.ImageLoaderUtil;
-import com.appointphoto.activity.util.Util;
-import com.appointphoto.model.Work;
-import com.example.appointphoto.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,17 +13,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.appointphoto.activity.util.ImageLoaderUtil;
+import com.appointphoto.activity.util.Util;
+import com.appointphoto.model.Work;
+import com.example.appointphoto.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
 //摄影师空间数据
 public class WorkAdapter extends BaseAdapter {
 	private Context mContext;
 	// 当前进入摄影师空间，摄影师作品
-	private List<Work> workList = new ArrayList<Work>();
+	private MyWorkList myworklist;
 	private LayoutInflater inflater;
 	private ImageLoadingListener animateFirstListener;
-	private PhotoViewAttacher mAttacher;
 
-	public WorkAdapter(Context paramContext) {
+	public WorkAdapter(Context paramContext,MyWorkList mywork) {
 		this.mContext = paramContext;
+		myworklist = mywork;
 		animateFirstListener = new ImageLoaderUtil.AnimateFirstDisplayListener(
 				mContext);
 		inflater = LayoutInflater.from(mContext);
@@ -42,7 +39,7 @@ public class WorkAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return this.workList.size();
+		return this.myworklist.getWorkList().size();
 	}
 
 	public Context getmContext() {
@@ -53,13 +50,6 @@ public class WorkAdapter extends BaseAdapter {
 		this.mContext = mContext;
 	}
 
-	public List<Work> getWorkList() {
-		return workList;
-	}
-
-	public void setWorkList(List<Work> workList) {
-		this.workList = workList;
-	}
 
 	public LayoutInflater getInflater() {
 		return inflater;
@@ -107,7 +97,7 @@ public class WorkAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();// 获得暂存的引用
 		}
-		Work tempWrok = workList.get(position);
+		Work tempWrok = myworklist.getWorkList().get(position);
 		// 设置数据
 		holder.desTextView.setText(tempWrok.getDescription());
 		holder.numLikeTextView.setText(tempWrok.getNumLikes() + "");

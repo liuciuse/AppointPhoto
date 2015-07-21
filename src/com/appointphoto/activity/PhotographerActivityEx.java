@@ -5,13 +5,16 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 
 import com.appointphoto.activity.ListPhotographerFragment.MyHandler;
+import com.appointphoto.activity.util.ImageLoaderUtil;
 import com.appointphoto.activity.util.JsonUtil;
 import com.appointphoto.activity.util.MyListViewUtil;
 import com.appointphoto.activity.util.MyURI;
 import com.appointphoto.activity.util.Util;
+import com.appointphoto.adapter.MyWorkList;
 import com.appointphoto.adapter.ServicePagerAdapter;
 import com.appointphoto.adapter.PhotographerAdapter;
 import com.appointphoto.adapter.WorkAdapter;
+import com.appointphoto.model.Photographer;
 import com.appointphoto.service.MyService;
 import com.appointphoto.widget.PageControl;
 import com.example.appointphoto.R;
@@ -19,9 +22,12 @@ import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +43,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -46,6 +53,20 @@ public class PhotographerActivityEx extends Activity {
 	private ServicePagerAdapter serviceadapter;
 	private LayoutInflater inflater;
 	private PageControl pagecontrol;
+	private Photographer photographer;
+	ProgressDialog mypDialog;
+	MyWorkList worklist = new MyWorkList();//工作作品
+	
+	public MyWorkList getWorklist() {
+		return worklist;
+	}
+
+	public void setWorklist(MyWorkList worklist) {
+		this.worklist = worklist;
+	}
+
+	private ImageLoadingListener animateFirstListener;
+
 	public PageControl getPagecontrol() {
 		return pagecontrol;
 	}
@@ -55,11 +76,13 @@ public class PhotographerActivityEx extends Activity {
 
 	private MyHandler myHandler = new MyHandler();
 	private Runnable mythread;
-	private ViewPager mactivities;//服务页面
+	private ViewPager mactivities;// 服务页面
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		photographer = (Photographer) getIntent().getSerializableExtra(
+				"photographer");
 		MyService.allActivity.add(this);
 		inflater = getLayoutInflater();
 		requestWindowFeature(Window.FEATURE_NO_TITLE); // 移除ActionBar
@@ -67,24 +90,46 @@ public class PhotographerActivityEx extends Activity {
 		// 初始化界面
 		init();
 		firstInitView();
+		// 初始化activity相关信息
+		initactivityview();
 	}
 
+	// 注册对话框
+	private void initDialog() {
+		mypDialog = new ProgressDialog(this);
+		// 设置进度条风格，风格为圆形，旋转的
+		mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		// 设置ProgressDialog 标题
+		mypDialog.setTitle("载入");
+		mypDialog.setMessage("正在载入...");
+		// 设置ProgressDialog 的进度条是否不明确
+		mypDialog.setIndeterminate(false);
+		// 设置ProgressDialog 是否可以按退回按键取消
+		mypDialog.setCancelable(false);
+	}
+
+	// 初始化 头部Views
+	private void initactivityview() {
+		ImageView photographer_avatar_imageV = (ImageView) convertView
+				.findViewById(R.id.photographer_avatar_imageV);
+		ImageLoader.getInstance().displayImage(MyURI.testavaterURI,
+				photographer_avatar_imageV, ImageLoaderUtil.options,
+				animateFirstListener);
+
+	}
+
+	// 载入界面时，初始化部分数据
 	private void firstInitView() {
 		if (mythread == null) {
 			mythread = new Runnable() {
 				@Override
 				public void run() {
-					int statusCode[] = new int[1];
 					try {
-						adapter.setWorkList((JsonUtil
-								.jsonToWorklist(new JSONArray(MyURI.uri2Str(
-										MyURI.RefreshWorkURI, MyURI
-												.refreshWorks().toString(),
-										statusCode)))));
+						worklist.refresh();
 					} catch (Exception e) {
 						Message msg = new Message();
 						msg.what = 404;
-						myHandler.dispatchMessage(msg);
+						myHandler.sendMessage(msg);
 						e.printStackTrace();
 					}
 					Message msg = new Message();
@@ -95,11 +140,16 @@ public class PhotographerActivityEx extends Activity {
 			};
 		}
 		new Thread(mythread).run();
+		mypDialog.show();
 	}
 
 	private void init() {
+		
+		initDialog();
+		animateFirstListener = new ImageLoaderUtil.AnimateFirstDisplayListener(
+				this);
 		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_refresh_list);
-		adapter = new WorkAdapter(this);
+		adapter = new WorkAdapter(this,worklist);
 		// 初始化刷新
 		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_refresh_list);
 		// 设置两端刷新
@@ -142,9 +192,10 @@ public class PhotographerActivityEx extends Activity {
 					@Override
 					public void onItemClick(AdapterView<?> container,
 							View view, int position, long id) {
-						PhotographerActivityEx.this.startActivity(new Intent(
-								PhotographerActivityEx.this,
-								ImageBrowActivity.class));
+						Intent intent = new Intent(PhotographerActivityEx.this,
+								ImageBrowActivity.class);
+						intent.putExtra("number", position-2);
+						PhotographerActivityEx.this.startActivity(intent);
 					}
 
 				});
@@ -166,7 +217,7 @@ public class PhotographerActivityEx extends Activity {
 		mactivities.setAdapter(serviceadapter);
 		// mactivities.setAdapter(new ServicePagerAdapter(
 		// PhotographerActivityEx.this));
-//		mactivities.setAdapter(serviceadapter);
+		// mactivities.setAdapter(serviceadapter);
 		new Thread(new MypageGet()).start();
 		// 设置监听状态变化，用来表达其他美化表示
 		mactivities.setOnPageChangeListener(new OnPageChangeListener() {
@@ -189,7 +240,7 @@ public class PhotographerActivityEx extends Activity {
 
 		pagecontrol = (PageControl) convertView
 				.findViewById(R.id.activity_pagecontrol);
-//		pagecontrol.setCount(3);
+		// pagecontrol.setCount(3);
 		// 当有activities时，隐藏空项
 		emptyactivities = (LinearLayout) convertView
 				.findViewById(R.id.item_empty_layout);
@@ -201,11 +252,8 @@ public class PhotographerActivityEx extends Activity {
 	private class PullRefresh extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			int statusCode[] = new int[1];
 			try {
-				adapter.setWorkList((JsonUtil.jsonToWorklist(new JSONArray(
-						MyURI.uri2Str(MyURI.RefreshWorkURI, MyURI
-								.refreshWorks().toString(), statusCode)))));
+				worklist.refresh();
 			} catch (Exception e) {
 				this.cancel(true);
 				e.printStackTrace();
@@ -237,12 +285,8 @@ public class PhotographerActivityEx extends Activity {
 	private class PullupGetMore extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			int statusCode[] = new int[1];
 			try {
-				adapter.getWorkList().addAll(
-						((JsonUtil.jsonToWorklist(new JSONArray(MyURI.uri2Str(
-								MyURI.getmoreWorkURI, MyURI.getmoreWorks()
-										.toString(), statusCode))))));
+				worklist.getmore();
 			} catch (Exception e) {
 				this.cancel(true);
 				e.printStackTrace();
@@ -283,15 +327,17 @@ public class PhotographerActivityEx extends Activity {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			if (msg.what == 200) {
-				//初始化刷新界面
+				// 初始化刷新界面
 				adapter.notifyDataSetChanged();
 			} else if (msg.what == 404) {
 				// 获取数据失败
 			} else if (msg.what == 201) {
-				//初始化服务界面
+				// 初始化服务界面
 				serviceadapter.initViews();
 				serviceadapter.notifyDataSetChanged();
 			}
+			
+			mypDialog.cancel();
 
 		}
 	}
@@ -303,9 +349,10 @@ public class PhotographerActivityEx extends Activity {
 		public void run() {
 			int statusCode[] = new int[1];
 			try {
-				serviceadapter.setServices(((JsonUtil.jsonToServiceList(new JSONArray(
-						MyURI.uri2Str(MyURI.testServiceURI, MyURI
-								.getServices().toString(), statusCode))))));
+				serviceadapter.setServices(((JsonUtil
+						.jsonToServiceList(new JSONArray(MyURI.uri2Str(
+								MyURI.testServiceURI, MyURI.getServices()
+										.toString(), statusCode))))));
 			} catch (Exception e) {
 				Message msg = new Message();
 				msg.what = 404;

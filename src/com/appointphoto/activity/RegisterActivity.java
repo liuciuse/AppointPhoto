@@ -5,12 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -20,6 +24,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.appointphoto.activity.util.BASE64;
 import com.appointphoto.activity.util.JsonUtil;
 import com.appointphoto.activity.util.MyURI;
 import com.appointphoto.activity.util.Util;
@@ -63,12 +69,19 @@ public class RegisterActivity extends Activity {
 	ProgressDialog mypDialog;
 	Handler mHandler;
 
+	// 注册信息持久化
+	SharedPreferences reginster_info;
+	JSONObject registerJson = new JSONObject();// 注册
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		MyService.allActivity.add(this);
 		requestWindowFeature(Window.FEATURE_NO_TITLE); // 移除ActionBar
 		setContentView(R.layout.register);
+		reginster_info = getSharedPreferences(
+				getResources().getString(R.string.reginster_pref),
+				Context.MODE_PRIVATE);
 		inflater = LayoutInflater.from(this);
 		initItems();
 		mHandler = new MyHandler();
@@ -175,6 +188,7 @@ public class RegisterActivity extends Activity {
 		// return;
 		// }
 		// 注册
+
 		new RegisterRequest().execute();
 		mypDialog.show();
 	}
@@ -231,6 +245,9 @@ public class RegisterActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_CANCELED) {
+			return;
+		}
 		switch (requestCode) {
 		case 1:// 获取身份信息
 			if (resultCode == Activity.RESULT_OK) {
@@ -242,49 +259,16 @@ public class RegisterActivity extends Activity {
 			break;
 		case 11:// 获取所拍摄过作品
 			if (resultCode == RESULT_OK) {
-				// Uri uri = data.getData();
-				// Log.e("uri", uri.toString());
-				// ContentResolver cr = this.getContentResolver();
-				// try {
-				// Bitmap bitmap = BitmapFactory.decodeStream(cr
-				// .openInputStream(uri));
-				// workBitmap1 = bitmap;
-				// workImageV1.setImageBitmap(bitmap);
-				// } catch (FileNotFoundException e) {
-				// Log.e("Exception", e.getMessage(), e);
-				// }
 				new Thread(new LoadPic(data, 2001)).start();
 			}
 			break;
 		case 12:// 获取所拍摄过作品
 			if (resultCode == RESULT_OK) {
-				// Uri uri = data.getData();
-				// Log.e("uri", uri.toString());
-				// ContentResolver cr = this.getContentResolver();
-				// try {
-				// Bitmap bitmap = BitmapFactory.decodeStream(cr
-				// .openInputStream(uri));
-				// workBitmap2 = bitmap;
-				// workImageV2.setImageBitmap(bitmap);
-				// } catch (FileNotFoundException e) {
-				// Log.e("Exception", e.getMessage(), e);
-				// }
 			}
 			new Thread(new LoadPic(data, 2002)).start();
 			break;
 		case 13:// 获取所拍摄过作品
 			if (resultCode == RESULT_OK) {
-				// Uri uri = data.getData();
-				// Log.e("uri", uri.toString());
-				// ContentResolver cr = this.getContentResolver();
-				// try {
-				// Bitmap bitmap = BitmapFactory.decodeStream(cr
-				// .openInputStream(uri));
-				// workBitmap3 = bitmap;
-				// workImageV3.setImageBitmap(bitmap);
-				// } catch (FileNotFoundException e) {
-				// Log.e("Exception", e.getMessage(), e);
-				// }
 				new Thread(new LoadPic(data, 2003)).start();
 			}
 			break;
@@ -399,6 +383,15 @@ public class RegisterActivity extends Activity {
 			Bitmap bitmap = null;
 			try {
 				bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+
+				// 将bitmap转化为base编码保存到jsonstr中
+				// String jsonStr = Util.bitmapToBase64(bitmap);
+				// try {
+				// registerJson.put("image1", jsonStr);
+				// } catch (JSONException e) {
+				// e.printStackTrace();
+				// }
+
 				Message message = new Message();
 				Bundle data = new Bundle();
 				data.putParcelable("workBitmap", bitmap);
@@ -431,11 +424,11 @@ public class RegisterActivity extends Activity {
 			Bitmap bitmap = data.getParcelable("workBitmap");
 			switch (msg.what) {
 			case 1111:
-				
+
 				break;
 			case 2001:
-				workBitmap1 = bitmap;
 				workImageV1.setImageBitmap(bitmap);
+
 				break;
 			case 2002:
 				workImageV2.setImageBitmap(bitmap);
@@ -444,11 +437,55 @@ public class RegisterActivity extends Activity {
 				workImageV3.setImageBitmap(bitmap);
 				break;
 
+			// 下面时生成JSON数据后回调
+			case 3001:
+
+				break;
+
+			case 3002:
+
+				break;
+
+			case 3003:
+
+				break;
+
 			default:
 				break;
 			}
 
 		}
+	}
+
+	@Deprecated
+	// bitmap转换为Json后回调，此类没有使用
+	class GetJson implements Runnable {
+
+		String jsonName;
+		Bitmap bitmap;
+		int callId;
+
+		public GetJson(String jsonName, Bitmap bitmap, int callId) {
+			this.jsonName = jsonName;
+			this.bitmap = bitmap;
+			this.callId = callId;
+		}
+
+		@Override
+		public void run() {
+			String jsonStr = Util.bitmapToBase64(bitmap);
+			try {
+				registerJson.put(jsonName, jsonStr);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			Message msg = new Message();
+			msg.what = callId;
+			mHandler.sendMessage(msg);
+
+		}
+
 	}
 
 }

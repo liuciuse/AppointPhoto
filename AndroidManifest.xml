@@ -123,7 +123,12 @@
         <service
             android:name="com.appointphoto.service.MyService"
             android:enabled="true"
-            android:process=":myservie_v1" />
+            android:process=":myservie_v1" >
+            <intent-filter>
+                <action android:name="com.appointphoto.service.MyService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
 
         <uses-library android:name="android.test.runner" />
     </application>

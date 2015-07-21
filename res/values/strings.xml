@@ -45,5 +45,13 @@
     
     <string name="action_settings">设置</string>
     
+    <string name="user_name">name</string>
+    <string name="user_password">password</string>
+    <string name="user_passwordMD5">passEx</string>
+    <string name="user_loginstate">loginstate</string>
+    <string name="user_pref">user</string>
+    <string name="reginster_pref">register_info</string>
+    
+    
     
 </resources>

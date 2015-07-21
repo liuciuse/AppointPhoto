@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -23,9 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appointphoto.activity.util.ImageLoaderUtil;
+import com.appointphoto.activity.util.MyURI;
 import com.appointphoto.activity.util.Util;
 import com.appointphoto.service.MyService;
 import com.example.appointphoto.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
@@ -38,15 +43,16 @@ public class MainActivity extends FragmentActivity implements
 	private ResideMenuItem itemMine;
 	private ResideMenuItem itemSetting;
 	private ResideMenuItem itemQuit;
-//	private ResideMenuItem itemRegAsPhotographer;
-//	private ResideMenuItem itemRegAsModel;
-//	private ResideMenuItem itemRegAsdresser;
+	// private ResideMenuItem itemRegAsPhotographer;
+	// private ResideMenuItem itemRegAsModel;
+	// private ResideMenuItem itemRegAsdresser;
 	private TextView headerName;
 
 	SharedPreferences user;// 用户
-	JSONObject userJson;// 保存用户信息
+	JSONObject userJson = new JSONObject();// 保存用户信息
 	boolean islogin = false;// 是否登录
 	private ResideMenuItem itemRegAsOther;
+	private ImageLoadingListener animateFirstListener;
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -78,9 +84,9 @@ public class MainActivity extends FragmentActivity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE); // 移除ActionBar
 		setContentView(R.layout.main);
 		mContext = this;
+		initUser();
 		initItems();
 		setUpMenu();
-		initUser();
 
 		if (savedInstanceState == null)
 			changeFragment(new ListPhotographerFragment());
@@ -103,13 +109,15 @@ public class MainActivity extends FragmentActivity implements
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		String loginstate = userJson.optString("loginstate");
+		String loginstate = userJson.optString("loginstate","");
 		if (loginstate.equals("logined")) {
 			islogin = true;
 		}
 	}
 
 	private void initItems() {
+		animateFirstListener = new ImageLoaderUtil.AnimateFirstDisplayListener(
+				this);
 		headerName = (TextView) findViewById(R.id.layout_top_name);
 		headerName.setText("摄影师");
 	}
@@ -118,6 +126,7 @@ public class MainActivity extends FragmentActivity implements
 
 		// attach to current activity;
 		resideMenu = new ResideMenu(this);
+		initresideMenu(resideMenu);
 		resideMenu.setBackground(R.drawable.menu_background);
 		resideMenu.attachToActivity(this);
 		resideMenu.setMenuListener(menuListener);
@@ -133,14 +142,15 @@ public class MainActivity extends FragmentActivity implements
 				"我的");
 		itemSetting = new ResideMenuItem(this, R.drawable.menu_icon_setting,
 				"设置");
-//		itemRegAsPhotographer = new ResideMenuItem(this,
-//				R.drawable.menu_icon_invite, "申请为认证摄影师");
-//		itemRegAsdresser = new ResideMenuItem(this,
-//				R.drawable.menu_icon_invite, "申请为认证化妆师");
-//		itemRegAsModel = new ResideMenuItem(this, R.drawable.menu_icon_invite,
-//				"申请为认证模特");
-		itemRegAsOther = new ResideMenuItem(this,
-				R.drawable.menu_icon_invite, "申请为认证角色");
+		// itemRegAsPhotographer = new ResideMenuItem(this,
+		// R.drawable.menu_icon_invite, "申请为认证摄影师");
+		// itemRegAsdresser = new ResideMenuItem(this,
+		// R.drawable.menu_icon_invite, "申请为认证化妆师");
+		// itemRegAsModel = new ResideMenuItem(this,
+		// R.drawable.menu_icon_invite,
+		// "申请为认证模特");
+		itemRegAsOther = new ResideMenuItem(this, R.drawable.menu_icon_invite,
+				"申请为认证角色");
 		itemQuit = new ResideMenuItem(this, R.drawable.menu_icon_quit, "退出登录");
 		itemQuit.setVisibility(View.GONE);
 
@@ -148,21 +158,20 @@ public class MainActivity extends FragmentActivity implements
 		itemMine.setOnClickListener(this);
 		itemSetting.setOnClickListener(this);
 		itemQuit.setOnClickListener(this);
-//		itemRegAsPhotographer.setOnClickListener(this);
-//		itemRegAsModel.setOnClickListener(this);
-//		itemRegAsdresser.setOnClickListener(this);
+		// itemRegAsPhotographer.setOnClickListener(this);
+		// itemRegAsModel.setOnClickListener(this);
+		// itemRegAsdresser.setOnClickListener(this);
 		itemRegAsOther.setOnClickListener(this);
 
 		resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemMine, ResideMenu.DIRECTION_LEFT);
-//		resideMenu
-//				.addMenuItem(itemRegAsPhotographer, ResideMenu.DIRECTION_LEFT);
-//		resideMenu.addMenuItem(itemRegAsdresser, ResideMenu.DIRECTION_LEFT);
-//		resideMenu.addMenuItem(itemRegAsModel, ResideMenu.DIRECTION_LEFT);
+		// resideMenu
+		// .addMenuItem(itemRegAsPhotographer, ResideMenu.DIRECTION_LEFT);
+		// resideMenu.addMenuItem(itemRegAsdresser, ResideMenu.DIRECTION_LEFT);
+		// resideMenu.addMenuItem(itemRegAsModel, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemRegAsOther, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemSetting, ResideMenu.DIRECTION_LEFT);
 		resideMenu.addMenuItem(itemQuit, ResideMenu.DIRECTION_LEFT);
-		
 
 		findViewById(R.id.title_bar_left_menu).setOnClickListener(
 				new View.OnClickListener() {
@@ -180,6 +189,18 @@ public class MainActivity extends FragmentActivity implements
 				startActivity(new Intent(MainActivity.this, LoginActivity.class));
 			}
 		});
+	}
+
+	//初始化Menu上Views
+	private void initresideMenu(ResideMenu resideMenu2) {
+		ImageView user_avatar_image_view = (ImageView) resideMenu2
+				.findViewById(R.id.user_avatar_image_view);
+		ImageLoader.getInstance().displayImage(MyURI.testavaterURI,
+				user_avatar_image_view, ImageLoaderUtil.options,
+				animateFirstListener);
+		TextView user_nickname_text_view = (TextView) resideMenu2.findViewById(R.id.user_nickname_text_view);
+		String userName = userJson.optString("user", "");
+		user_nickname_text_view.setText(userName);
 	}
 
 	// 控制侧边栏的默认行为
@@ -200,7 +221,7 @@ public class MainActivity extends FragmentActivity implements
 			headerName.setText("我的");
 		} else if (view == itemSetting) {
 			startActivity(new Intent(this, SettingActivity.class));
-		} else if(view == itemRegAsOther){
+		} else if (view == itemRegAsOther) {
 			resideMenu.closeMenu();
 			startActivity(new Intent(this, ChangeRoleActivity.class));
 		} else if (view == itemQuit) {
@@ -235,7 +256,7 @@ public class MainActivity extends FragmentActivity implements
 
 	// 退出用户，做清理工作
 	protected void clear() {
-		user.edit().clear();
+		user.edit().clear().commit();
 		itemQuit.setVisibility(View.GONE);
 	}
 

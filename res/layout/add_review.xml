@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@color/default_bg_color" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:id="@id/nav_bar" layout="@layout/navbar" />
+    <EditText android:textSize="@dimen/home_user_name_textsize" android:textColor="@color/home_user_name_color" android:textColorHint="@color/upload_work_edittext_color" android:gravity="top|left|center" android:id="@id/add_review_editText" android:background="@drawable/edittext_drawable" android:padding="@dimen/general_space" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:hint="请输入评论内容" android:inputType="textMultiLine" />
+</LinearLayout>

@@ -33,7 +33,7 @@ public class User implements Serializable {
 	protected String name;//ÓÃ»§Ãû
 	protected String password;//ÃÜÂë
 
-	public User() {
+	private User() {
 	}
 
 	public User(JSONObject paramJSONObject) {

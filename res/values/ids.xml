@@ -382,4 +382,7 @@
     
     <item type="id" name="item_uploadwork_btn" />
     
+    <item type="id" name="password_editText" />
+    <item type="id" name="password_confirm_editText" />
+    
 </resources>

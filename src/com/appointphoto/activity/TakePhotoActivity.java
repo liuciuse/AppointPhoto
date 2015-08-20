@@ -1,11 +1,6 @@
 package com.appointphoto.activity;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
-import com.appointphoto.activity.RegisterActivity.LoadPic;
-import com.appointphoto.activity.RegisterActivity.MyHandler;
-import com.example.appointphoto.R;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -21,6 +16,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import com.example.appointphoto.R;
 
 public class TakePhotoActivity extends Activity {
 	Button uploadimgs;// ÉÏ´«Í¼Æ¬

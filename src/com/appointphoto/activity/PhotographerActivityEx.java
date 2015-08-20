@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 
 import com.appointphoto.activity.ListPhotographerFragment.MyHandler;
+import com.appointphoto.activity.util.HeadViewUtil;
 import com.appointphoto.activity.util.ImageLoaderUtil;
 import com.appointphoto.activity.util.JsonUtil;
 import com.appointphoto.activity.util.MyListViewUtil;
@@ -55,8 +56,8 @@ public class PhotographerActivityEx extends Activity {
 	private PageControl pagecontrol;
 	private Photographer photographer;
 	ProgressDialog mypDialog;
-	MyWorkList worklist = new MyWorkList();//工作作品
-	
+	MyWorkList worklist = new MyWorkList();// 工作作品
+
 	public MyWorkList getWorklist() {
 		return worklist;
 	}
@@ -144,12 +145,13 @@ public class PhotographerActivityEx extends Activity {
 	}
 
 	private void init() {
-		
+
+		HeadViewUtil.back(this);
 		initDialog();
 		animateFirstListener = new ImageLoaderUtil.AnimateFirstDisplayListener(
 				this);
 		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_refresh_list);
-		adapter = new WorkAdapter(this,worklist);
+		adapter = new WorkAdapter(this, worklist);
 		// 初始化刷新
 		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_refresh_list);
 		// 设置两端刷新
@@ -194,7 +196,7 @@ public class PhotographerActivityEx extends Activity {
 							View view, int position, long id) {
 						Intent intent = new Intent(PhotographerActivityEx.this,
 								ImageBrowActivity.class);
-						intent.putExtra("number", position-2);
+						intent.putExtra("number", position - 2);
 						PhotographerActivityEx.this.startActivity(intent);
 					}
 
@@ -336,7 +338,7 @@ public class PhotographerActivityEx extends Activity {
 				serviceadapter.initViews();
 				serviceadapter.notifyDataSetChanged();
 			}
-			
+
 			mypDialog.cancel();
 
 		}

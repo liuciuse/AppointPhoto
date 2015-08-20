@@ -21,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.appointphoto.activity.util.HeadViewUtil;
 import com.appointphoto.activity.util.HttpUtil;
 import com.appointphoto.activity.util.MD5;
 import com.appointphoto.activity.util.MyURI;
@@ -62,6 +63,7 @@ public class LoginDetailActivity extends Activity {
 	}
 
 	private void initItems() {
+		HeadViewUtil.back(this);
 		// µÇÂ¼
 		login_normol_btn = (Button) findViewById(R.id.login_normol_btn);
 		login_normol_btn.setOnClickListener(new View.OnClickListener() {

@@ -4,6 +4,7 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.Service;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -170,6 +171,7 @@ public class ImageBrowActivity extends Activity {
 	}
 	//µã»÷ÆÀÂÛ
 	public void dealreview() {
-		
+		Intent intent = new Intent(this,ReViewActivity.class);
+		startActivity(intent);
 	}
 }

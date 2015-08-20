@@ -22,7 +22,7 @@ import android.content.Intent;
 //全局的
 public class XApplication extends Application {
 	// 当前用户
-	private User user = new User();
+	private User user = new User(new JSONObject());
 	
 	
 

@@ -1,8 +1,11 @@
 package com.appointphoto.activity.util;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
+import com.loopj.android.http.AsyncHttpClient;
 
 public class HttpUtil {
-	public static HttpClient httpClient = new DefaultHttpClient();
+	public static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+	static {
+		asyncHttpClient.setConnectTimeout(2000);
+	}
+	
 }

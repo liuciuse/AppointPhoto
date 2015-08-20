@@ -1,10 +1,10 @@
 package com.appointphoto.activity;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +15,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -24,22 +25,19 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.appointphoto.activity.util.BASE64;
-import com.appointphoto.activity.util.JsonUtil;
+import com.appointphoto.activity.util.HeadViewUtil;
 import com.appointphoto.activity.util.MyURI;
 import com.appointphoto.activity.util.Util;
 import com.appointphoto.activity.util.fileupload.FormFile;
@@ -62,9 +60,13 @@ public class RegisterActivity extends Activity {
 	private EditText inviteEditText;
 	private Button locationBtn;
 	private EditText nameEditText;
-	private Bitmap workBitmap1;
-	private Bitmap workBitmap2;
-	private Bitmap workBitmap3;
+	// private Bitmap workBitmap1;
+	// private Bitmap workBitmap2;
+	// private Bitmap workBitmap3;
+	private String filePath0;
+	private String filePath1;
+	private String filePath2;
+
 	PopupWindow popupWindow;
 	ProgressDialog mypDialog;
 	Handler mHandler;
@@ -88,6 +90,8 @@ public class RegisterActivity extends Activity {
 	}
 
 	private void initItems() {
+
+		HeadViewUtil.back(this);
 		// 选择性别
 		genderbtn = (Button) findViewById(R.id.gender_btn);
 		genderbtn.setOnClickListener(new View.OnClickListener() {
@@ -241,42 +245,65 @@ public class RegisterActivity extends Activity {
 		popupWindow.showAsDropDown(view, 100, 0);
 	}
 
-	// 相机拍照后
+	// 获取文件名
+	private String getFileName(String filePath) {
+		int lastIndex = filePath.lastIndexOf("/");
+		String filename = filePath.substring(lastIndex + 1, filePath.length());
+		return filename;
+	}
+
+	// 从Uri获取文件路径
+	private String getFilePath(Uri uri) {
+		// 获取图片路径
+		String[] proj = { MediaStore.Images.Media.DATA };
+		Cursor cursor = managedQuery(uri, proj, null, null, null);
+		int column_index = cursor
+				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		cursor.moveToFirst();
+		String path = cursor.getString(column_index);
+		return path;
+	}
+
+	// 选择图片后
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_CANCELED) {
 			return;
 		}
-		switch (requestCode) {
-		case 1:// 获取身份信息
-			if (resultCode == Activity.RESULT_OK) {
+		if (resultCode == Activity.RESULT_OK) {
+			Uri oriUri = data.getData();
+			switch (requestCode) {
+			case 1:// 获取身份信息
 				Bundle bundle = data.getExtras();
 				Bitmap bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
 				photoImageV.setImageBitmap(bitmap);// 将图片显示在ImageView里
 				conformBitmap = bitmap;
-			}
-			break;
-		case 11:// 获取所拍摄过作品
-			if (resultCode == RESULT_OK) {
-				new Thread(new LoadPic(data, 2001)).start();
-			}
-			break;
-		case 12:// 获取所拍摄过作品
-			if (resultCode == RESULT_OK) {
-			}
-			new Thread(new LoadPic(data, 2002)).start();
-			break;
-		case 13:// 获取所拍摄过作品
-			if (resultCode == RESULT_OK) {
-				new Thread(new LoadPic(data, 2003)).start();
-			}
-			break;
+				break;
+			case 11:// 获取所拍摄过作品
+				// 获取图片
+				// Bitmap bm = MediaStore.Images.Media.getBitmap(
+				// getContentResolver(), oriUri);
+				workImageV1.setImageURI(oriUri);
+				// 获取图片路径
+				filePath0 = getFilePath(oriUri);
+				break;
+			case 12:// 获取所拍摄过作品
+				workImageV2.setImageURI(oriUri);
+				// 获取图片路径
+				filePath1 = getFilePath(oriUri);
+				break;
+			case 13:// 获取所拍摄过作品
+				workImageV3.setImageURI(oriUri);
+				// 获取图片路径
+				filePath2 = getFilePath(oriUri);
+				break;
 
-		default:
-			break;
+			default:
+				break;
+			}
+
 		}
-
 	}
 
 	// 上传个人作品
@@ -319,18 +346,20 @@ public class RegisterActivity extends Activity {
 			try {
 				// 发送注册请求
 				String requestUrl = MyURI.registerURI;
+				String fileName1 = getFileName(filePath0);
+				String fileName2 = getFileName(filePath1);
+				String fileName3 = getFileName(filePath2);
+
 				// 请求普通信息
 				Map<String, String> params2 = new HashMap<String, String>();
-				String fileName1 = "fileName1";
-				String fileName2 = "fileName2";
 				params2.put("name", "张三");
 				params2.put("fileName1", fileName1);
 				params2.put("fileName2", fileName2);
 				FormFile formfile1 = new FormFile(fileName1,
-						Util.Bitmap2IS(workBitmap1), "image1",
+						new File(filePath0), fileName1,
 						"application/octet-stream");
 				FormFile formfile2 = new FormFile(fileName2,
-						Util.Bitmap2IS(workBitmap2), "image2",
+						new File(filePath1), fileName2,
 						"application/octet-stream");
 				FormFile[] formfiles = new FormFile[2];
 				formfiles[0] = formfile1;
@@ -365,7 +394,7 @@ public class RegisterActivity extends Activity {
 		}
 	}
 
-	// 设置图片时，有点慢
+	/*// 设置图片时，有点慢
 	class LoadPic implements Runnable {
 		Intent data;
 		int what;
@@ -406,7 +435,7 @@ public class RegisterActivity extends Activity {
 		}
 
 	}
-
+*/
 	// 主线程处理
 	class MyHandler extends Handler {
 		public MyHandler() {
@@ -424,29 +453,6 @@ public class RegisterActivity extends Activity {
 			Bitmap bitmap = data.getParcelable("workBitmap");
 			switch (msg.what) {
 			case 1111:
-
-				break;
-			case 2001:
-				workImageV1.setImageBitmap(bitmap);
-
-				break;
-			case 2002:
-				workImageV2.setImageBitmap(bitmap);
-				break;
-			case 2003:
-				workImageV3.setImageBitmap(bitmap);
-				break;
-
-			// 下面时生成JSON数据后回调
-			case 3001:
-
-				break;
-
-			case 3002:
-
-				break;
-
-			case 3003:
 
 				break;
 

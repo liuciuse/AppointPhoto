@@ -2,6 +2,7 @@ package com.appointphoto.activity;
 
 import java.util.ArrayList;
 
+import com.appointphoto.activity.util.HeadViewUtil;
 import com.appointphoto.adapter.ServiceImgAdapter;
 import com.appointphoto.service.MyService;
 import com.appointphoto.widget.PageControl;
@@ -37,6 +38,7 @@ public class ServiceDetailActivity extends Activity {
 	}
 
 	private void initItems() {
+		HeadViewUtil.back(this);
 		inflater = getLayoutInflater();
 		order_btn = (Button) findViewById(R.id.item_order_btn);
 		order_btn.setOnClickListener(new View.OnClickListener() {
@@ -63,16 +65,17 @@ public class ServiceDetailActivity extends Activity {
 			public void onPageSelected(int position) {
 				pagecontrol.setSelected(position);
 			}
+
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 
 			}
+
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 
 			}
 		});
 	}
-	
 
 }

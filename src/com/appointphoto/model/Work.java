@@ -8,7 +8,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+
 import com.appointphoto.activity.util.MyURI;
+import com.example.appointphoto.R;
 
 public class Work implements Serializable {
 	private String category;
@@ -34,7 +37,7 @@ public class Work implements Serializable {
 		this.updatedAt = paramJSONObject.optString("updated_at", "");
 		this.category = paramJSONObject.optString("item_category", "");
 		this.imageBaseUrl = paramJSONObject.optString("image_base_url",
-				MyURI.testPtURI);
+				"drawable://"+R.drawable.photographer_work_default_icon);
 		this.numLikes = paramJSONObject.optInt("num_likes", 0);
 		this.numReviews = paramJSONObject.optInt("num_reviews", 0);
 		this.imgheight = paramJSONObject.optString("imgheight", "1024");

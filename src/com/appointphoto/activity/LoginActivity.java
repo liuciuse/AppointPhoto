@@ -30,7 +30,7 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View view) {
 				LoginActivity.this.startActivity(new Intent(LoginActivity.this,
-						RegisterActivity.class));
+						NomalRegisterActivity.class));
 			}
 		});
 		left_btn = (Button) findViewById(R.id.left_btn);

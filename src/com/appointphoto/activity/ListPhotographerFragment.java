@@ -77,7 +77,7 @@ public class ListPhotographerFragment extends Fragment {
 	Button title_bar_item7;
 	Button title_bar_item8;
 
-	ProgressDialog mypDialog;
+//	ProgressDialog mypDialog;
 
 	private MyHandler myHandler = new MyHandler();
 	private Runnable mythread;
@@ -86,26 +86,31 @@ public class ListPhotographerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		this.inflater = inflater;
-		parentView = inflater.inflate(R.layout.homelistview, container, false);
+		parentView = inflater.inflate(R.layout.homelistview, null, false);
 		adapter = new PhotographerAdapter(getActivity());
 		setUpViews();
 		firstInitView(parentView);
 		return parentView;
 	}
-
-	// 注册对话框
-	private void initDialog() {
-		mypDialog = new ProgressDialog(getActivity());
-		// 设置进度条风格，风格为圆形，旋转的
-		mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		// 设置ProgressDialog 标题
-		mypDialog.setTitle("载入");
-		mypDialog.setMessage("正在载入...");
-		// 设置ProgressDialog 的进度条是否不明确
-		mypDialog.setIndeterminate(false);
-		// 设置ProgressDialog 是否可以按退回按键取消
-		mypDialog.setCancelable(false);
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
 	}
+
+//	// 注册对话框
+//	private void initDialog() {
+//		mypDialog = new ProgressDialog(getActivity());
+//		// 设置进度条风格，风格为圆形，旋转的
+//		mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//		// 设置ProgressDialog 标题
+//		mypDialog.setTitle("载入");
+//		mypDialog.setMessage("正在载入...");
+//		// 设置ProgressDialog 的进度条是否不明确
+//		mypDialog.setIndeterminate(false);
+//		// 设置ProgressDialog 是否可以按退回按键取消
+//		mypDialog.setCancelable(false);
+//	}
 
 	// 首次打开界面，刷新界面
 	private void firstInitView(View parentView2) {
@@ -134,12 +139,12 @@ public class ListPhotographerFragment extends Fragment {
 			};
 		}
 		new Thread(mythread).run();
-		mypDialog.show();
+//		mypDialog.show();
 	}
 
 	// 初始化界面
 	private void setUpViews() {
-		initDialog();//初始化对话框
+//		initDialog();//初始化对话框
 		context = (MainActivity) getActivity();
 		MainActivity parentActivity = (MainActivity) context;
 		resideMenu = parentActivity.getResideMenu();
@@ -385,7 +390,7 @@ public class ListPhotographerFragment extends Fragment {
 				// 获取数据失败
 			}
 			
-			mypDialog.cancel();
+//			mypDialog.cancel();
 
 		}
 	}

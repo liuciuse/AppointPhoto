@@ -9,24 +9,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.appointphoto.activity.util.ImageLoaderUtil;
 import com.appointphoto.activity.util.MyURI;
-import com.appointphoto.activity.util.Util;
 import com.appointphoto.service.MyService;
 import com.example.appointphoto.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -38,7 +33,6 @@ public class MainActivity extends FragmentActivity implements
 		View.OnClickListener {
 
 	private ResideMenu resideMenu;
-	private MainActivity mContext;
 	private ResideMenuItem itemHome;
 	private ResideMenuItem itemMine;
 	private ResideMenuItem itemSetting;
@@ -47,7 +41,8 @@ public class MainActivity extends FragmentActivity implements
 	// private ResideMenuItem itemRegAsModel;
 	// private ResideMenuItem itemRegAsdresser;
 	private TextView headerName;
-
+	
+	
 	SharedPreferences user;// 用户
 	JSONObject userJson = new JSONObject();// 保存用户信息
 	boolean islogin = false;// 是否登录
@@ -83,10 +78,10 @@ public class MainActivity extends FragmentActivity implements
 		MyService.allActivity.add(this);
 		requestWindowFeature(Window.FEATURE_NO_TITLE); // 移除ActionBar
 		setContentView(R.layout.main);
-		mContext = this;
 		initUser();
 		initItems();
 		setUpMenu();
+		
 
 		if (savedInstanceState == null)
 			changeFragment(new ListPhotographerFragment());
@@ -115,13 +110,16 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
+	//初始化头部
 	private void initItems() {
 		animateFirstListener = new ImageLoaderUtil.AnimateFirstDisplayListener(
 				this);
 		headerName = (TextView) findViewById(R.id.layout_top_name);
 		headerName.setText("摄影师");
+		
 	}
 
+	//初始化菜单
 	private void setUpMenu() {
 
 		// attach to current activity;
@@ -290,4 +288,5 @@ public class MainActivity extends FragmentActivity implements
 	public TextView getHeaderName() {
 		return headerName;
 	}
+
 }
